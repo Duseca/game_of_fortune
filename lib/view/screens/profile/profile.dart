@@ -1,0 +1,124 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:game_of_fortune/constants/app_images/assets.dart';
+import 'package:game_of_fortune/main.dart';
+import 'package:game_of_fortune/view/constants/app_colors.dart';
+import 'package:game_of_fortune/view/constants/app_sizes.dart';
+import 'package:game_of_fortune/view/constants/app_styling.dart';
+import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
+import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
+import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
+
+class Profile extends StatelessWidget {
+  const Profile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: simpleAppBar(haveBackButton: false, title: 'Profile'),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              padding: AppSizes.DEFAULT,
+              physics: const BouncingScrollPhysics(),
+              children: [
+                Stack(
+                  children: [
+                    Center(
+                      child: CommonImageView(
+                        imagePath: Assets.imagesProfile,
+                        fit: BoxFit.contain,
+                        height: 113,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 11.0),
+                      child: Center(
+                        child: CommonImageView(
+                          url: dummyimg1,
+                          radius: 200,
+                          height: 90,
+                          width: 90,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(boxShadow: [
+                        BoxShadow(
+                            color: kSecondaryColor,
+                            blurRadius: 80,
+                            offset: Offset(0, 25),
+                            spreadRadius: 10)
+                      ]),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          MyText(
+                            textAlign: TextAlign.center,
+                            paddingTop: 20,
+                            text: 'Melissa Thomas',
+                            size: 26,
+                            weight: FontWeight.w500,
+                          ),
+                          MyText(
+                            textAlign: TextAlign.center,
+                            text: 'luqmansardar111@gmail.com',
+                            weight: FontWeight.w400,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                profiletile(() {}, 'My Account'),
+                profiletile(() {}, 'Settings'),
+                profiletile(() {}, 'Terms and Conditions'),
+                profiletile(() {}, 'Log Out')
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget profiletile(VoidCallback ontap, String title) {
+    return InkWell(
+      onTap: ontap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Container(
+          decoration: btndeco(),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(child: MyText(text: title)),
+                CommonImageView(
+                  imagePath: Assets.imagesNext,
+                  height: 30,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
