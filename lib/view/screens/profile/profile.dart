@@ -6,9 +6,13 @@ import 'package:game_of_fortune/main.dart';
 import 'package:game_of_fortune/view/constants/app_colors.dart';
 import 'package:game_of_fortune/view/constants/app_sizes.dart';
 import 'package:game_of_fortune/view/constants/app_styling.dart';
+import 'package:game_of_fortune/view/screens/profile/my_account.dart';
+import 'package:game_of_fortune/view/screens/profile/settings.dart';
+import 'package:game_of_fortune/view/screens/profile/terms_and_conditions.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
+import 'package:get/get.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -86,10 +90,18 @@ class Profile extends StatelessWidget {
                 SizedBox(
                   height: 50,
                 ),
-                profiletile(() {}, 'My Account'),
-                profiletile(() {}, 'Settings'),
-                profiletile(() {}, 'Terms and Conditions'),
-                profiletile(() {}, 'Log Out')
+                profiletile(() {
+                  Get.to(() => MyAccount());
+                }, 'My Account'),
+                profiletile(() {
+                  Get.to(() => Settings());
+                }, 'Settings'),
+                profiletile(() {
+                  Get.to(() => TermsConditions());
+                }, 'Terms and Conditions'),
+                profiletile(() {
+                  Get.dialog(Logout());
+                }, 'Log Out')
               ],
             ),
           ),

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:game_of_fortune/constants/app_images/assets.dart';
 import 'package:game_of_fortune/view/constants/app_colors.dart';
 import 'package:game_of_fortune/view/constants/app_fonts.dart';
-import 'package:game_of_fortune/view/constants/app_sizes.dart';
-import 'package:game_of_fortune/view/screens/play/play.dart';
+import 'package:game_of_fortune/view/screens/play/home.dart';
 import 'package:game_of_fortune/view/screens/players/players.dart';
 import 'package:game_of_fortune/view/screens/profile/profile.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
@@ -44,7 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   final List<Widget> screens = [
-    const Play(),
+    const Home(),
     const Players(),
     const Profile(),
   ];

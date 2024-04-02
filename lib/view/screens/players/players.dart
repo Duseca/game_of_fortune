@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/constants/app_images/assets.dart';
 import 'package:game_of_fortune/main.dart';
@@ -5,6 +6,7 @@ import 'package:game_of_fortune/view/constants/app_colors.dart';
 import 'package:game_of_fortune/view/constants/app_sizes.dart';
 import 'package:game_of_fortune/view/constants/app_styling.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
+import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 
 class Players extends StatelessWidget {
@@ -39,7 +41,50 @@ class Players extends StatelessWidget {
                       ),
                     ],
                   ),
-                )
+                ),
+                for (int i = 0; i < 8; i++)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 9.0),
+                    child: Container(
+                      decoration: rounded(Colors.white),
+                      child: Stack(
+                        children: [
+                          ListTile(
+                            leading: CommonImageView(
+                              url: dummyimg3,
+                              fit: BoxFit.cover,
+                              radius: 200,
+                              width: 50,
+                              height: 50,
+                            ),
+                            title: MyText(
+                              text: 'Terrence Wilderman',
+                              paddingBottom: 10,
+                              weight: FontWeight.w500,
+                            ),
+                            subtitle: MyText(
+                              text: '10 feb 2024',
+                              color: kGrey8Color,
+                            ),
+                            trailing: MyText(
+                              text: 'Highest Score',
+                              paddingBottom: 24,
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 10,
+                            right: 40,
+                            child: MyText(
+                              weight: FontWeight.bold,
+                              text: '27',
+                              size: 30,
+                              color: kSecondaryColor,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
               ],
             ),
           ),

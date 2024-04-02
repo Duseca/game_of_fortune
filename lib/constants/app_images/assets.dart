@@ -45,6 +45,10 @@ class Assets {
   /// assets/images/close.png
   static const String imagesClose = "assets/images/close.png";
 
+  /// Assets for imagesEdit
+  /// assets/images/edit.png
+  static const String imagesEdit = "assets/images/edit.png";
+
   /// Assets for imagesFillpaly
   /// assets/images/fillpaly.png
   static const String imagesFillpaly = "assets/images/fillpaly.png";
@@ -61,6 +65,14 @@ class Assets {
   /// assets/images/GE.png
   static const String imagesGE = "assets/images/GE.png";
 
+  /// Assets for imagesGlow
+  /// assets/images/glow.json
+  static const String imagesGlow = "assets/images/glow.json";
+
+  /// Assets for imagesGlow2
+  /// assets/images/glow2.png
+  static const String imagesGlow2 = "assets/images/glow2.png";
+
   /// Assets for imagesKey
   /// assets/images/key.png
   static const String imagesKey = "assets/images/key.png";
@@ -72,6 +84,10 @@ class Assets {
   /// Assets for imagesMail
   /// assets/images/mail.png
   static const String imagesMail = "assets/images/mail.png";
+
+  /// Assets for imagesMoney
+  /// assets/images/money.png
+  static const String imagesMoney = "assets/images/money.png";
 
   /// Assets for imagesNext
   /// assets/images/next.png
@@ -88,6 +104,10 @@ class Assets {
   /// Assets for imagesProfile
   /// assets/images/profile.png
   static const String imagesProfile = "assets/images/profile.png";
+
+  /// Assets for imagesRibbon
+  /// assets/images/ribbon.png
+  static const String imagesRibbon = "assets/images/ribbon.png";
 
   /// Assets for imagesTick
   /// assets/images/tick.png

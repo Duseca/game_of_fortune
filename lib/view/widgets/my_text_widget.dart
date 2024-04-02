@@ -16,6 +16,7 @@ class MyText extends StatelessWidget {
   final VoidCallback? onTap;
   List<Shadow>? textShadow;
   final int? maxLines;
+  final Paint? foreground;
   final double? size;
   final double? lineHeight;
   final double? paddingTop;
@@ -24,27 +25,28 @@ class MyText extends StatelessWidget {
   final double? paddingBottom;
   final double? letterSpacing;
 
-  MyText({
-    Key? key,
-    required this.text,
-    this.size,
-    this.lineHeight,
-    this.maxLines = 100,
-    this.decoration = TextDecoration.none,
-    this.color,
-    this.letterSpacing,
-    this.weight = FontWeight.w400,
-    this.textAlign,
-    this.textOverflow,
-    this.fontFamily,
-    this.paddingTop = 0,
-    this.paddingRight = 0,
-    this.paddingLeft = 0,
-    this.paddingBottom = 0,
-    this.onTap,
-    this.textShadow,
-    this.fontStyle,
-  }) : super(key: key);
+  MyText(
+      {Key? key,
+      required this.text,
+      this.size,
+      this.lineHeight,
+      this.maxLines = 100,
+      this.decoration = TextDecoration.none,
+      this.color,
+      this.letterSpacing,
+      this.weight = FontWeight.w400,
+      this.textAlign,
+      this.textOverflow,
+      this.fontFamily,
+      this.paddingTop = 0,
+      this.paddingRight = 0,
+      this.paddingLeft = 0,
+      this.paddingBottom = 0,
+      this.onTap,
+      this.textShadow,
+      this.fontStyle,
+      this.foreground})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +67,7 @@ class MyText extends StatelessWidget {
             color: color ?? kTertiaryColor,
             fontWeight: weight,
             decoration: decoration,
+            foreground: foreground,
             decorationColor: kBlackColor,
             decorationThickness: 2,
             fontFamily: fontFamily ?? AppFonts.OUTFIT,

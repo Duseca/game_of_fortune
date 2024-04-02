@@ -20,6 +20,7 @@ class MyButton extends StatelessWidget {
     this.hasicon,
     this.mBottom = 0,
     this.mTop = 0,
+    this.hasshadow,
     this.fontWeight = FontWeight.w600,
   });
 
@@ -36,7 +37,7 @@ class MyButton extends StatelessWidget {
   final bool haveSvg;
   final double mTop, mBottom;
   final FontWeight fontWeight;
-
+  bool? hasshadow;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,27 +45,35 @@ class MyButton extends StatelessWidget {
       child: Container(
         margin: EdgeInsets.only(top: mTop, bottom: mBottom),
         height: height,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          border: Border.all(
-              width: 2,
-              color: outlineColor ?? Color.fromARGB(255, 172, 225, 255)),
-          boxShadow: [
-            BoxShadow(
-              offset: Offset(0, 8),
-              color: kTertiaryColor,
-              blurRadius: 0,
-              spreadRadius: 0,
-            ),
-            BoxShadow(
-              offset: Offset(0, 3),
-              color: kSecondaryColor2,
-              blurRadius: 0,
-              spreadRadius: 0,
-            ),
-          ],
-          borderRadius: BorderRadius.circular(radius),
-        ),
+        decoration: hasshadow ?? false
+            ? BoxDecoration(
+                color: backgroundColor,
+                border: Border.all(
+                    width: 2,
+                    color: outlineColor ?? Color.fromARGB(255, 172, 225, 255)),
+                borderRadius: BorderRadius.circular(radius),
+              )
+            : BoxDecoration(
+                color: backgroundColor,
+                border: Border.all(
+                    width: 2,
+                    color: outlineColor ?? Color.fromARGB(255, 172, 225, 255)),
+                boxShadow: [
+                  BoxShadow(
+                    offset: Offset(0, 8),
+                    color: kTertiaryColor,
+                    blurRadius: 0,
+                    spreadRadius: 0,
+                  ),
+                  BoxShadow(
+                    offset: Offset(0, 3),
+                    color: kSecondaryColor2,
+                    blurRadius: 0,
+                    spreadRadius: 0,
+                  ),
+                ],
+                borderRadius: BorderRadius.circular(radius),
+              ),
         child: Material(
           color: Colors.transparent,
           child: Row(
