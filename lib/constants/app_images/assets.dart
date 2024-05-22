@@ -97,6 +97,10 @@ class Assets {
   /// assets/images/people.png
   static const String imagesPeople = "assets/images/people.png";
 
+  /// Assets for imagesPlaceholder
+  /// assets/images/placeholder.png
+  static const String imagesPlaceholder = "assets/images/placeholder.png";
+
   /// Assets for imagesPlay
   /// assets/images/play.png
   static const String imagesPlay = "assets/images/play.png";

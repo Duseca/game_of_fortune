@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/view/constants/app_strings.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/app_strings.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_field_widget.dart';

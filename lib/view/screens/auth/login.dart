@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_sizes.dart';
+import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_sizes.dart';
+import 'package:game_of_fortune/core/utils/validators.dart';
 import 'package:game_of_fortune/view/screens/auth/forget_pass.dart';
 import 'package:game_of_fortune/view/screens/auth/register.dart';
-import 'package:game_of_fortune/view/screens/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_field_widget.dart';
@@ -13,8 +14,8 @@ import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 import 'package:get/get.dart';
 
 class Login extends StatelessWidget {
-  const Login({super.key});
-
+  Login({super.key});
+  final authController = Get.find<AuthController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,27 +41,33 @@ class Login extends StatelessWidget {
                   paddingBottom: 40,
                 ),
                 MyTextField(
-                  label: 'Email',
-                  suffix: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: CommonImageView(
-                      imagePath: Assets.imagesMail,
-                      height: 10,
+                    label: 'Email',
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: CommonImageView(
+                        imagePath: Assets.imagesMail,
+                        height: 10,
+                      ),
                     ),
-                  ),
-                  hint: 'Enter your Email',
-                ),
+                    hint: 'Enter your Email',
+                    controller: authController.email,
+                    validator: (value) {
+                      return ValidationService.instance.emailValidator(value);
+                    }),
                 MyTextField(
-                  label: 'Password',
-                  suffix: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: CommonImageView(
-                      imagePath: Assets.imagesKey,
-                      height: 10,
+                    label: 'Password',
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: CommonImageView(
+                        imagePath: Assets.imagesKey,
+                        height: 10,
+                      ),
                     ),
-                  ),
-                  hint: 'Enter your New Password',
-                ),
+                    hint: 'Enter your New Password',
+                    controller: authController.password,
+                    validator: (value) {
+                      return ValidationService.instance.emptyValidator(value);
+                    }),
                 MyText(
                   text: 'Forget Password?',
                   color: kSecondaryColor,
@@ -71,8 +78,8 @@ class Login extends StatelessWidget {
                   paddingBottom: 30,
                 ),
                 MyButton(
-                    onTap: () {
-                      Get.to(() => BottomNavBar());
+                    onTap: () async {
+                      await authController.authenticateUser(context);
                     },
                     buttonText: 'Login'),
                 MyText(

@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/main.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_sizes.dart';
-import 'package:game_of_fortune/view/constants/app_styling.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_sizes.dart';
+import 'package:game_of_fortune/core/constants/app_styling.dart';
 import 'package:game_of_fortune/view/screens/profile/my_account.dart';
 import 'package:game_of_fortune/view/screens/profile/settings.dart';
 import 'package:game_of_fortune/view/screens/profile/terms_and_conditions.dart';
@@ -33,17 +31,29 @@ class Profile extends StatelessWidget {
                 Stack(
                   children: [
                     Center(
-                      child: CommonImageView(
-                        imagePath: Assets.imagesProfile,
-                        fit: BoxFit.contain,
-                        height: 113,
+                      child: Obx(
+                        () => userModelGlobal.value.img != ''
+                            ? CircleAvatar(
+                                radius: 60,
+                                backgroundColor: Colors.transparent,
+                                child: CommonImageView(
+                                  url: userModelGlobal.value.img,
+                                  fit: BoxFit.cover,
+                                  width: Get.width,
+                                  radius: 70,
+                                ),
+                              )
+                            : CommonImageView(
+                                imagePath: Assets.imagesProfile,
+                                fit: BoxFit.contain,
+                                height: 113,
+                              ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 11.0),
                       child: Center(
                         child: CommonImageView(
-                          url: dummyimg1,
                           radius: 200,
                           height: 90,
                           width: 90,
@@ -70,17 +80,22 @@ class Profile extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          MyText(
-                            textAlign: TextAlign.center,
-                            paddingTop: 20,
-                            text: 'Melissa Thomas',
-                            size: 26,
-                            weight: FontWeight.w500,
+                          Obx(
+                            () => MyText(
+                              textAlign: TextAlign.center,
+                              paddingTop: 20,
+                              text:
+                                  '${userModelGlobal.value.fName} ${userModelGlobal.value.lName}',
+                              size: 26,
+                              weight: FontWeight.w500,
+                            ),
                           ),
-                          MyText(
-                            textAlign: TextAlign.center,
-                            text: 'luqmansardar111@gmail.com',
-                            weight: FontWeight.w400,
+                          Obx(
+                            () => MyText(
+                              textAlign: TextAlign.center,
+                              text: userModelGlobal.value.email!,
+                              weight: FontWeight.w400,
+                            ),
                           ),
                         ],
                       ),

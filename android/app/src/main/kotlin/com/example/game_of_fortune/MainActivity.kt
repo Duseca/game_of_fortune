@@ -1,4 +1,4 @@
-package com.example.game_of_fortune
+package com.duseca.game_of_fortune
 
 import io.flutter.embedding.android.FlutterActivity
 

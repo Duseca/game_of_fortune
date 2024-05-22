@@ -8,7 +8,7 @@
 PRODUCT_NAME = game_of_fortune
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.gameOfFortune
+PRODUCT_BUNDLE_IDENTIFIER = com.duseca.gameOfFortune
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2024 com.example. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2024 com.duseca. All rights reserved.

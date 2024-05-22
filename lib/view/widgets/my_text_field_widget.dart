@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_fonts.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_fonts.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 
 // ignore: must_be_immutable
@@ -22,6 +22,7 @@ class MyTextField extends StatelessWidget {
     this.suffix,
     this.labelWeight,
     this.kBorderColor,
+    this.validator,
     this.kFocusBorderColor,
     this.isReadOnly,
   }) : super(key: key);
@@ -33,7 +34,7 @@ class MyTextField extends StatelessWidget {
   double? marginBottom;
   int? maxLines;
   double? labelSize;
-
+  String? Function(String?)? validator;
   Color? filledColor, hintColor, kBorderColor, kFocusBorderColor;
   Widget? prefix, suffix;
   FontWeight? labelWeight;
@@ -64,6 +65,7 @@ class MyTextField extends StatelessWidget {
               readOnly: isReadOnly ?? false,
               controller: controller,
               onChanged: onChanged,
+              validator: validator ?? null,
               textInputAction: TextInputAction.next,
               obscureText: isObSecure!,
               obscuringCharacter: '*',

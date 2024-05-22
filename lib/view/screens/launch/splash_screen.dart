@@ -1,8 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
+import 'package:game_of_fortune/core/bindings/bindings.dart';
+import 'package:game_of_fortune/core/common/functions.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/view/screens/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:game_of_fortune/view/screens/launch/get_started.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:get/get.dart';
@@ -23,7 +27,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigateToLoginScreen() {
     Timer(const Duration(seconds: 3), () {
-      Get.offAll(() => const GetStarted());
+      if (auth.currentUser != null) {
+        getUserDataStream(userId: auth.currentUser!.uid);
+        Get.offAll(() => BottomNavBar(), binding: BottomBarBindings());
+      } else {
+        Get.offAll(() => const GetStarted());
+      }
     });
   }
 

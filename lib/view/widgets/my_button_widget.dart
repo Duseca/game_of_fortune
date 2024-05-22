@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 
 // ignore: must_be_immutable

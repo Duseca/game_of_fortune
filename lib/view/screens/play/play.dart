@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_sizes.dart';
-import 'package:game_of_fortune/view/constants/app_styling.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_sizes.dart';
+import 'package:game_of_fortune/core/constants/app_styling.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../constants/app_images/assets.dart';
+import '../../../core/constants/app_images/assets.dart';
 
 class Play extends StatelessWidget {
   const Play({super.key});

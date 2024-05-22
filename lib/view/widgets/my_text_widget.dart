@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_fonts.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_fonts.dart';
 
 // ignore: must_be_immutable
 class MyText extends StatelessWidget {

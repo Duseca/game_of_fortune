@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_sizes.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/view/screens/auth/login.dart';
+import 'package:game_of_fortune/view/screens/auth/register.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
@@ -58,7 +59,11 @@ class GetStarted extends StatelessWidget {
                         mBottom: 20,
                       ),
                       MyBorderButton(
-                          buttonText: 'Create Account', onTap: () {}),
+                        buttonText: 'Create Account',
+                        onTap: () {
+                          Get.to(() => Register());
+                        },
+                      ),
                     ],
                   )
                 ],

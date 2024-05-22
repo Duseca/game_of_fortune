@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/view/constants/app_colors.dart';
-import 'package:game_of_fortune/view/constants/app_sizes.dart';
-import 'package:game_of_fortune/view/constants/app_styling.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_sizes.dart';
+import 'package:game_of_fortune/core/constants/app_styling.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/view/screens/play/play.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
@@ -48,12 +49,16 @@ class Home extends StatelessWidget {
                         width: 150,
                         decoration: rounded2(kSecondaryColor, kTertiaryColor),
                         child: Center(
-                          child: MyText(
-                            paddingBottom: 10,
-                            paddingTop: 10,
-                            text: '01',
-                            color: kPrimaryColor,
-                            size: 22,
+                          child: Obx(
+                            () => MyText(
+                              paddingBottom: 10,
+                              paddingTop: 10,
+                              text: userModelGlobal.value.lives
+                                  .toString()
+                                  .padLeft(2, '0'),
+                              color: kPrimaryColor,
+                              size: 22,
+                            ),
                           ),
                         ),
                       ),

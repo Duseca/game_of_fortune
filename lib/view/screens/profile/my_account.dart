@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/constants/app_images/assets.dart';
-import 'package:game_of_fortune/main.dart';
+import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/core/utils/file_pickers/image_picker.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyAccount extends StatelessWidget {
-  const MyAccount({super.key});
+  MyAccount({super.key});
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -24,22 +29,58 @@ class MyAccount extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CommonImageView(
-                      url: dummyimg12,
-                      height: 95,
-                      width: 95,
-                      radius: 200,
-                      fit: BoxFit.cover,
+                    Obx(
+                      () => userModelGlobal.value.img != ''
+                          ? CommonImageView(
+                              url: userModelGlobal.value.img,
+                              height: 95,
+                              width: 95,
+                              radius: 200,
+                              fit: BoxFit.cover,
+                            )
+                          : CommonImageView(
+                              imagePath: 'assets/images/placeholder.png',
+                              height: 95,
+                              width: 95,
+                              radius: 200,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ],
                 ),
                 SizedBox(
                   height: 5,
                 ),
-                CommonImageView(
-                  imagePath: Assets.imagesEdit,
-                  height: 20,
-                  fit: BoxFit.contain,
+                InkWell(
+                  onTap: () {
+                    ImagePickerService.instance.openProfilePickerBottomSheet(
+                        context: context,
+                        onCameraPick: () async {
+                          XFile? file = await ImagePickerService.instance
+                              .pickImageFromCamera();
+                          Get.back();
+
+                          if (file != null) {
+                            await authController.updateProfilePicture(
+                                file, context);
+                          }
+                        },
+                        onGalleryPick: () async {
+                          XFile? file = await ImagePickerService.instance
+                              .pickSingleImageFromGallery();
+                          Get.back();
+
+                          if (file != null) {
+                            await authController.updateProfilePicture(
+                                file, context);
+                          }
+                        });
+                  },
+                  child: CommonImageView(
+                    imagePath: Assets.imagesEdit,
+                    height: 20,
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -51,8 +92,10 @@ class MyAccount extends StatelessWidget {
                       text: 'First Name',
                       weight: FontWeight.w600,
                     ),
-                    MyText(
-                      text: 'Jhon',
+                    Obx(
+                      () => MyText(
+                        text: userModelGlobal.value.fName!,
+                      ),
                     )
                   ],
                 ),
@@ -72,8 +115,10 @@ class MyAccount extends StatelessWidget {
                       text: 'Last Name',
                       weight: FontWeight.w600,
                     ),
-                    MyText(
-                      text: 'Doe',
+                    Obx(
+                      () => MyText(
+                        text: userModelGlobal.value.lName!,
+                      ),
                     )
                   ],
                 ),
@@ -93,8 +138,10 @@ class MyAccount extends StatelessWidget {
                       text: 'Email',
                       weight: FontWeight.w600,
                     ),
-                    MyText(
-                      text: 'jdoe@villa.com',
+                    Obx(
+                      () => MyText(
+                        text: userModelGlobal.value.email!,
+                      ),
                     )
                   ],
                 ),

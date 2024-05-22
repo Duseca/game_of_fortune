@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "255816798591",
+    "project_id": "game-of-fortune-6a305",
+    "storage_bucket": "game-of-fortune-6a305.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:255816798591:android:603c83f63c43edeb2a8a4a",
+        "android_client_info": {
+          "package_name": "com.duseca.game_of_fortune"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB4Dayqkx4eQuhmlD0fT1rVgHLu7ZknciE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

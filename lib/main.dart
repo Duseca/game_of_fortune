@@ -1,9 +1,14 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/view/config/routes/routes.dart';
-import 'package:game_of_fortune/view/config/themes/light_theme.dart';
+import 'package:game_of_fortune/config/routes/routes.dart';
+import 'package:game_of_fortune/config/themes/light_theme.dart';
+import 'package:game_of_fortune/core/bindings/bindings.dart';
+import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -26,6 +31,7 @@ class MyApp extends StatelessWidget {
       title: 'GAME OF FORTUNE',
       theme: lightTheme,
       themeMode: ThemeMode.light,
+      initialBinding: InitialBindings(),
       initialRoute: AppLinks.splash_screen,
       defaultTransition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 200),
