@@ -1,13 +1,17 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
   late StreamSubscription<QuerySnapshot> playersStream;
   RxList<PlayerModel> players = RxList<PlayerModel>([]);
+  late StreamSubscription<QuerySnapshot> gameStream;
+  Rx<GameModel> game = GameModel().obs;
 
   @override
   void onInit() {
@@ -44,9 +48,22 @@ class GameController extends GetxController {
     }
   }
 
+  getGame() async {
+    try {
+      gameStream = await gameCollection.limit(1).snapshots().listen((snapshot) {
+        if (snapshot.docs.isNotEmpty) {
+          game.value = GameModel.fromMap(snapshot.docs.first.data());
+        }
+      });
+    } catch (e) {
+      log("Exception::getGame():$e");
+    }
+  }
+
   @override
   void onClose() {
     super.onClose();
+    gameStream.cancel();
     playersStream.cancel();
   }
 }
