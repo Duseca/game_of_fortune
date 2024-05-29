@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
@@ -11,7 +12,9 @@ import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  Home({super.key});
+
+  final gameController = Get.find<GameController>();
 
   @override
   Widget build(BuildContext context) {
@@ -98,11 +101,14 @@ class Home extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         MyText(text: 'Play & Win'),
-                        MyText(
-                          text: '\$10.000',
-                          size: 46,
-                          color: kSecondaryColor,
-                          weight: FontWeight.bold,
+                        Obx(
+                          () => MyText(
+                            text:
+                                '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
+                            size: 46,
+                            color: kSecondaryColor,
+                            weight: FontWeight.bold,
+                          ),
                         )
                       ],
                     ),
@@ -117,7 +123,16 @@ class Home extends StatelessWidget {
                   ),
                   MyButton(
                       onTap: () {
-                        Get.to(() => Play());
+                        if (userModelGlobal.value.lives! > 0) {
+                          if (gameController.game.value.canReplayAfter ==
+                                  null ||
+                              (gameController.game.value.canReplayAfter !=
+                                      null &&
+                                  gameController.game.value.canReplayAfter!
+                                      .isBefore(DateTime.now()))) {
+                            Get.to(() => Play());
+                          }
+                        } else {}
                       },
                       buttonText: 'Play')
                 ],

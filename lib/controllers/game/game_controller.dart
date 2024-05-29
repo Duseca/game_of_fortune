@@ -3,8 +3,10 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
+import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
@@ -12,19 +14,18 @@ class GameController extends GetxController {
   RxList<PlayerModel> players = RxList<PlayerModel>([]);
   late StreamSubscription<QuerySnapshot> gameStream;
   Rx<GameModel> game = GameModel().obs;
+  RxList<ChoicesModel> selectedChoices = RxList<ChoicesModel>([]);
 
   @override
   void onInit() {
     super.onInit();
     getAllPlayers();
+    getGame();
   }
 
   getAllPlayers() async {
     try {
-      playersStream = await playersCollection
-          .where('playerId', isNotEqualTo: auth.currentUser!.uid)
-          .snapshots()
-          .listen((snapshot) {
+      playersStream = await playersCollection.snapshots().listen((snapshot) {
         players.clear();
         for (var doc in snapshot.docs) {
           PlayerModel player = PlayerModel.fromMap(doc.data());
@@ -58,6 +59,29 @@ class GameController extends GetxController {
     } catch (e) {
       log("Exception::getGame():$e");
     }
+  }
+
+  updateLives() async {
+    var updatedLives = userModelGlobal.value.lives! - 1;
+
+    await playersCollection
+        .doc(auth.currentUser!.uid)
+        .update({'lives': updatedLives});
+  }
+
+  updateScores() async {
+    if (userModelGlobal.value.highestScore == null ||
+        userModelGlobal.value.highestScore! < selectedChoices.length) {
+      await playersCollection.doc(auth.currentUser!.uid).update({
+        'highestScore': selectedChoices.length,
+        'scoredDate': DateTime.now()
+      });
+    }
+  }
+
+  updateReplayDuration() async {
+    await gameCollection.doc(game.value.gameId).update(
+        {'canReplayAfter': DateTime.now().add(const Duration(days: 1))});
   }
 
   @override

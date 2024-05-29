@@ -312,4 +312,52 @@ class FirebaseCRUDService {
         return 'An unexpected error occurred, please try again.';
     }
   }
+
+  //batch write (the list of documents and collection paths should be of same lengths)
+  Future<bool> batchWriteMultipleDocuments({
+    required List<Map<String, dynamic>> documents,
+    required List<String> respectiveDocIds,
+    required List<CollectionReference> collectionPaths,
+  }) async {
+    if (documents.length != collectionPaths.length) {
+      log("The lengths of documents and collectionPaths lists should be the same!");
+      return false;
+    }
+
+    try {
+      // Get a Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Create a new batch
+      WriteBatch batch = firestore.batch();
+
+      // Iterate through the list of documents and add set operations to the batch
+      for (int i = 0; i < documents.length; i++) {
+        //getting reference
+        DocumentReference docRef = collectionPaths[i].doc(respectiveDocIds[i]);
+
+        batch.set(docRef, documents[i]);
+      }
+
+      // Commit the batch
+      await batch.commit();
+
+      return true;
+    } on FirebaseException catch (e) {
+      //getting firebase error message
+      final errorMessage = getFirestoreErrorMessage(e);
+
+      //showing failure snackbar
+      CustomSnackBars.instance
+          .showFailureSnackbar(title: "Error", message: errorMessage);
+
+      //returning false to indicate that the batch write was not successful
+      return false;
+    } catch (e) {
+      log("This was the exception while creating document on Firestore: $e");
+
+      //returning false to indicate that the batch write was not successful
+      return false;
+    }
+  }
 }

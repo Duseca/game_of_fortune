@@ -43,7 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   final List<Widget> screens = [
-    const Home(),
+    Home(),
     Players(),
     const Profile(),
   ];

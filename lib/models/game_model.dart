@@ -16,8 +16,8 @@ class GameModel {
         map.containsKey('lastWonBy') ? lastWonBy = map['lastWonBy'] : '';
     prize = map.containsKey('prize') ? prize = map['prize'] : '';
     canReplayAfter = map.containsKey('canReplayAfter')
-        ? canReplayAfter = map['canReplayAfter']
-        : '';
+        ? canReplayAfter = map['canReplayAfter'].toDate()
+        : DateTime.now();
   }
 
   Map<String, dynamic> toMap() {

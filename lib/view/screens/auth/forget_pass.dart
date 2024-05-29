@@ -3,7 +3,6 @@ import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/utils/validators.dart';
-import 'package:game_of_fortune/view/screens/auth/verify_email.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_field_widget.dart';
