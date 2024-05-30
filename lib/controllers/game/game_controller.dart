@@ -6,7 +6,6 @@ import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
-import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
 import 'package:get/get.dart';
 
 class GameController extends GetxController {
