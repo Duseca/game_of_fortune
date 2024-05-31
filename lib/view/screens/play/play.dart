@@ -93,18 +93,16 @@ class Play extends StatelessWidget {
                             onTap: () {
                               var left = Random.secure().nextBool();
                               ChoicesModel choice =
-                                  ChoicesModel(left: true, right: false);
-
-                              // ChoicesModel(left: left, right: !left);
-                              print("choice: ${choice.toMap()}");
-                              // if (choice.left == true) {
-                              gameController.selectedChoices.add(choice);
-                              if (gameController.selectedChoices.length >= 30) {
-                                Get.dialog(MoneyPrize());
+                                  ChoicesModel(left: left, right: !left);
+                              if (choice.left == true) {
+                                gameController.selectedChoices.add(choice);
+                                if (gameController.selectedChoices.length >=
+                                    30) {
+                                  Get.dialog(MoneyPrize());
+                                }
+                              } else {
+                                Get.dialog(GameOver());
                               }
-                              // } else {
-                              //   Get.dialog(GameOver());
-                              // }
                             },
                           ),
                         ),
@@ -118,16 +116,16 @@ class Play extends StatelessWidget {
                               var right = Random.secure().nextBool();
                               ChoicesModel choice =
                                   ChoicesModel(left: !right, right: right);
-                              // if (choice.right == true) {
-                              //   gameController.selectedChoices.add(choice);
-                              //   if (gameController.selectedChoices.length ==
-                              //       30) {
-                              //     Get.dialog(MoneyPrize());
-                              //   }
-                              //   ;
-                              // } else {
-                              //   Get.dialog(GameOver());
-                              // }
+                              if (choice.right == true) {
+                                gameController.selectedChoices.add(choice);
+                                if (gameController.selectedChoices.length ==
+                                    30) {
+                                  Get.dialog(MoneyPrize());
+                                }
+                                ;
+                              } else {
+                                Get.dialog(GameOver());
+                              }
                             },
                           ),
                         ),
@@ -200,7 +198,7 @@ class GameOver extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await gameController.updateLives();
+        await gameController.updateLives('-');
         await gameController.updateScores();
         gameController.selectedChoices.clear();
         return await true;
@@ -263,7 +261,7 @@ class GameOver extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: MyButton(
                               onTap: () async {
-                                await gameController.updateLives();
+                                await gameController.updateLives('-');
                                 await gameController.updateScores();
                                 gameController.selectedChoices.clear();
                                 Get.back();

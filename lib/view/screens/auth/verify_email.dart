@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
-import 'package:game_of_fortune/core/constants/app_sizes.dart';
-import 'package:game_of_fortune/view/screens/auth/create_new_pass.dart';
-import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
-import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 import 'package:get/get.dart';

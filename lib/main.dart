@@ -5,9 +5,20 @@ import 'package:game_of_fortune/config/themes/light_theme.dart';
 import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize();
+  MobileAds.instance.updateRequestConfiguration(
+    RequestConfiguration(
+      tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
+      testDeviceIds: <String>[
+        "3559F6861A199DE645DA48CA436D88EE",
+        "A521F63C415DD7E6629E16D13F0D01C7",
+      ],
+    ),
+  );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }

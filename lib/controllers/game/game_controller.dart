@@ -6,20 +6,28 @@ import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
+import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
+import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GameController extends GetxController {
   late StreamSubscription<QuerySnapshot> playersStream;
   RxList<PlayerModel> players = RxList<PlayerModel>([]);
   late StreamSubscription<QuerySnapshot> gameStream;
   Rx<GameModel> game = GameModel().obs;
+  Rx<PlayerModel> winner = PlayerModel().obs;
+  RxBool isloading = false.obs;
+  RewardedAd? rewardedAd;
+  RxInt rewardedScore = 0.obs;
   RxList<ChoicesModel> selectedChoices = RxList<ChoicesModel>([]);
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    getAllPlayers();
-    getGame();
+    await getAllPlayers();
+    await getGame();
+    await addLife();
   }
 
   getAllPlayers() async {
@@ -50,19 +58,23 @@ class GameController extends GetxController {
 
   getGame() async {
     try {
+      isloading(true);
       gameStream = await gameCollection.limit(1).snapshots().listen((snapshot) {
         if (snapshot.docs.isNotEmpty) {
           game.value = GameModel.fromMap(snapshot.docs.first.data());
         }
+        isloading(false);
       });
     } catch (e) {
+      isloading(false);
       log("Exception::getGame():$e");
     }
   }
 
-  updateLives() async {
-    var updatedLives = userModelGlobal.value.lives! - 1;
-
+  updateLives(String operator) async {
+    var updatedLives = operator == '+'
+        ? userModelGlobal.value.lives! + 1
+        : userModelGlobal.value.lives! - 1;
     await playersCollection
         .doc(auth.currentUser!.uid)
         .update({'lives': updatedLives});
@@ -79,8 +91,81 @@ class GameController extends GetxController {
   }
 
   updateReplayDuration() async {
-    await gameCollection.doc(game.value.gameId).update(
-        {'canReplayAfter': DateTime.now().add(const Duration(days: 1))});
+    await gameCollection.doc(game.value.gameId).update({
+      'canReplayAfter': DateTime.now().add(const Duration(days: 1)),
+      'lastWonBy': auth.currentUser!.uid,
+      'prize': game.value.prize! * 2,
+    });
+  }
+
+  getWinner() async {
+    PlayerModel? player =
+        players.where((p) => p.playerId == game.value.lastWonBy).firstOrNull;
+    if (player != null) {
+      winner.value = player;
+    } else {
+      await FirebaseCRUDService.instance
+          .readSingleDocument(
+              collectionReference: playersCollection,
+              docId: game.value.lastWonBy ?? '')
+          .then((snapshot) {
+        if (snapshot != null) {
+          winner.value =
+              PlayerModel.fromMap(snapshot.data() as Map<String, dynamic>);
+        }
+      });
+    }
+  }
+
+  addLife() async {
+    int difference =
+        DateTime.now().difference(userModelGlobal.value.livesUpdatedOn!).inDays;
+    var playerLives = userModelGlobal.value.lives! + difference;
+
+    await playersCollection
+        .doc(auth.currentUser!.uid)
+        .update({'lives': playerLives > 5 ? 5 : playerLives});
+  }
+
+  bool canReplay() {
+    return game.value.canReplayAfter == null ||
+        (game.value.canReplayAfter != null &&
+            game.value.canReplayAfter!.isBefore(DateTime.now()));
+  }
+
+  void createRewardedAd() {
+    RewardedAd.load(
+        adUnitId: AdService.rewardedAdUnitId!,
+        request: const AdRequest(),
+        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
+          rewardedAd = ad;
+        }, onAdFailedToLoad: (ad) {
+          rewardedAd = null;
+        }));
+  }
+
+  void showRewardedAd() {
+    try {
+      createRewardedAd();
+      if (rewardedAd != null) {
+        rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (ad) {
+            ad.dispose();
+            createRewardedAd();
+          },
+          onAdFailedToShowFullScreenContent: (ad, error) {
+            ad.dispose();
+            createRewardedAd();
+          },
+        );
+        rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
+          await updateLives('+');
+        });
+        rewardedAd = null;
+      }
+    } catch (e) {
+      log("Exception:::showRewardedAd():$e");
+    }
   }
 
   @override

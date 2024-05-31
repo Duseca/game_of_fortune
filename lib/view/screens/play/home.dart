@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -32,122 +34,139 @@ class Home extends StatelessWidget {
               height: 50,
               fit: BoxFit.contain,
             ),
-            Expanded(
-              child: ListView(
-                shrinkWrap: true,
-                padding: AppSizes.DEFAULT,
-                physics: const BouncingScrollPhysics(),
-                children: [
-                  MyText(
-                    paddingTop: 30,
-                    text: 'Lives Remaining',
-                    size: 18,
-                    paddingBottom: 20,
-                    textAlign: TextAlign.center,
-                    weight: FontWeight.w600,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Get.dialog(OhSnap());
-                        },
-                        child: Container(
-                          width: 150,
-                          decoration: rounded2(kSecondaryColor, kTertiaryColor),
-                          child: Center(
-                            child: Obx(
-                              () => MyText(
-                                paddingBottom: 10,
-                                paddingTop: 10,
-                                text: userModelGlobal.value.lives
-                                    .toString()
-                                    .padLeft(2, '0'),
-                                color: kPrimaryColor,
-                                size: 22,
-                              ),
+            Obx(
+              () => gameController.isloading.isFalse
+                  ? Expanded(
+                      child: ListView(
+                        shrinkWrap: true,
+                        children: [
+                          Visibility(
+                            visible: gameController.canReplay(),
+                            child: ListView(
+                              shrinkWrap: true,
+                              padding: AppSizes.DEFAULT,
+                              physics: const BouncingScrollPhysics(),
+                              children: [
+                                MyText(
+                                  paddingTop: 30,
+                                  text: 'Lives Remaining',
+                                  size: 18,
+                                  paddingBottom: 20,
+                                  textAlign: TextAlign.center,
+                                  weight: FontWeight.w600,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 150,
+                                      decoration: rounded2(
+                                          kSecondaryColor, kTertiaryColor),
+                                      child: Center(
+                                        child: Obx(
+                                          () => MyText(
+                                            paddingBottom: 10,
+                                            paddingTop: 10,
+                                            text: userModelGlobal.value.lives
+                                                .toString()
+                                                .padLeft(2, '0'),
+                                            color: kPrimaryColor,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                MyText(
+                                  paddingTop: 30,
+                                  text: 'Get Another Life',
+                                  size: 18,
+                                  paddingBottom: 20,
+                                  textAlign: TextAlign.center,
+                                  weight: FontWeight.w600,
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {
+                                        gameController.showRewardedAd();
+                                        log("message:shown ${userModelGlobal.value.lives}");
+                                      },
+                                      child: Container(
+                                        width: 150,
+                                        decoration: rounded2(
+                                            kSecondaryColor, kTertiaryColor),
+                                        child: Center(
+                                          child: MyText(
+                                            paddingBottom: 10,
+                                            paddingTop: 10,
+                                            text: 'Watch Video',
+                                            color: kPrimaryColor,
+                                            size: 22,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 40),
+                                Container(
+                                  height: 138,
+                                  decoration: rounded(kSecondaryColor2),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      MyText(text: 'Play & Win'),
+                                      Obx(
+                                        () => MyText(
+                                          text:
+                                              '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
+                                          size: 46,
+                                          color: kSecondaryColor,
+                                          weight: FontWeight.bold,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                MyText(
+                                  text: 'Playing cost one Life',
+                                  size: 16,
+                                  weight: FontWeight.w600,
+                                  paddingBottom: 20,
+                                  textAlign: TextAlign.center,
+                                  paddingTop: 30,
+                                ),
+                                MyButton(
+                                    onTap: () {
+                                      if (userModelGlobal.value.lives! > 0) {
+                                        Get.to(() => Play());
+                                      } else {
+                                        Get.dialog(OhSnap());
+                                      }
+                                    },
+                                    buttonText: 'Play')
+                              ],
                             ),
                           ),
-                        ),
+                          Visibility(
+                              visible: !gameController.canReplay(),
+                              child: Container(
+                                  alignment: Alignment.center,
+                                  height: Get.height * 0.75,
+                                  child: GameWinner())),
+                        ],
                       ),
-                    ],
-                  ),
-                  MyText(
-                    paddingTop: 30,
-                    text: 'Get Another Life',
-                    size: 18,
-                    paddingBottom: 20,
-                    textAlign: TextAlign.center,
-                    weight: FontWeight.w600,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Get.to(() => GameWinner());
-                        },
-                        child: Container(
-                          width: 150,
-                          decoration: rounded2(kSecondaryColor, kTertiaryColor),
-                          child: Center(
-                            child: MyText(
-                              paddingBottom: 10,
-                              paddingTop: 10,
-                              text: 'Watch Video',
-                              color: kPrimaryColor,
-                              size: 22,
-                            ),
-                          ),
-                        ),
+                    )
+                  : SizedBox(
+                      height: Get.height * 0.8,
+                      child: Center(
+                        child: CircularProgressIndicator(),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-                  Container(
-                    height: 138,
-                    decoration: rounded(kSecondaryColor2),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        MyText(text: 'Play & Win'),
-                        Obx(
-                          () => MyText(
-                            text:
-                                '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
-                            size: 46,
-                            color: kSecondaryColor,
-                            weight: FontWeight.bold,
-                          ),
-                        )
-                      ],
                     ),
-                  ),
-                  MyText(
-                    text: 'Playing cost one Life',
-                    size: 16,
-                    weight: FontWeight.w600,
-                    paddingBottom: 20,
-                    textAlign: TextAlign.center,
-                    paddingTop: 30,
-                  ),
-                  MyButton(
-                      onTap: () {
-                        if (userModelGlobal.value.lives! > 0) {
-                          if (gameController.game.value.canReplayAfter ==
-                                  null ||
-                              (gameController.game.value.canReplayAfter !=
-                                      null &&
-                                  gameController.game.value.canReplayAfter!
-                                      .isBefore(DateTime.now()))) {
-                            Get.to(() => Play());
-                          }
-                        } else {}
-                      },
-                      buttonText: 'Play')
-                ],
-              ),
             ),
           ],
         ),
@@ -234,7 +253,7 @@ class OhSnap extends StatelessWidget {
                             children: <Widget>[
                               // Stroked text as border.
                               Text(
-                                'Oh Snap!!!:(',
+                                'Oh Snap!',
                                 style: TextStyle(
                                   fontSize: 20,
                                   letterSpacing: 1,
@@ -256,7 +275,7 @@ class OhSnap extends StatelessWidget {
                               ),
                               // Solid text as fill.
                               Text(
-                                'Oh Snap!😭',
+                                'Oh Snap! 😭',
                                 style: TextStyle(
                                   letterSpacing: 1,
                                   fontSize: 20,

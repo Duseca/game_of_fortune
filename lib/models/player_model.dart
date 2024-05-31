@@ -1,7 +1,7 @@
 class PlayerModel {
   String? playerId, fName, lName, email, phoneNum, iso, img;
   int? lives, highestScore;
-  DateTime? scoredDate;
+  DateTime? scoredDate, livesUpdatedOn;
 
   PlayerModel({
     this.email,
@@ -11,6 +11,7 @@ class PlayerModel {
     this.phoneNum,
     this.playerId,
     this.img,
+    this.livesUpdatedOn,
     this.lives,
     this.highestScore,
     this.scoredDate,
@@ -30,6 +31,9 @@ class PlayerModel {
     scoredDate = map.containsKey('scoredDate')
         ? map['scoredDate'].toDate()
         : DateTime.now();
+    livesUpdatedOn = map.containsKey('livesUpdatedOn')
+        ? map['livesUpdatedOn'].toDate()
+        : DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -43,6 +47,7 @@ class PlayerModel {
       if (img != null) 'img': img,
       if (lives != null) 'lives': lives,
       if (highestScore != null) 'highestScore': highestScore,
+      if (livesUpdatedOn != null) 'livesUpdatedOn': livesUpdatedOn,
       if (scoredDate != null) 'scoredDate': scoredDate,
     };
   }
