@@ -1,9 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
-
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
@@ -13,7 +10,6 @@ import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-
 import '../../../core/constants/app_images/assets.dart';
 
 class Play extends StatelessWidget {
@@ -191,14 +187,29 @@ class Play extends StatelessWidget {
   }
 }
 
-class GameOver extends StatelessWidget {
+class GameOver extends StatefulWidget {
+  @override
+  State<GameOver> createState() => _GameOverState();
+}
+
+class _GameOverState extends State<GameOver> {
   final gameController = Get.find<GameController>();
+
+  @override
+  void initState() {
+    gameController.lifeUpdated(false);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        await gameController.updateLives('-');
+        print("swsqwswq ${gameController.lifeUpdated.value}");
+        if (gameController.lifeUpdated.isFalse) {
+          gameController.lifeUpdated(true);
+          await gameController.updateLives('-');
+        }
         await gameController.updateScores();
         gameController.selectedChoices.clear();
         return await true;
@@ -261,11 +272,23 @@ class GameOver extends StatelessWidget {
                           padding: const EdgeInsets.all(8.0),
                           child: MyButton(
                               onTap: () async {
-                                await gameController.updateLives('-');
-                                await gameController.updateScores();
-                                gameController.selectedChoices.clear();
-                                Get.back();
-                                Get.back();
+                                if (gameController.lifeUpdated.isFalse) {
+                                  print(
+                                      "jdscw ${gameController.lifeUpdated.value}");
+                                  gameController.lifeUpdated(true);
+                                  print(
+                                      "jdscw ${gameController.lifeUpdated.value}");
+                                  await gameController.updateLives('-');
+                                  await gameController.updateScores();
+                                  gameController.selectedChoices.clear();
+                                  Get.back();
+                                  Get.back();
+                                } else {
+                                  await gameController.updateScores();
+                                  gameController.selectedChoices.clear();
+                                  Get.back();
+                                  Get.back();
+                                }
                               },
                               buttonText: 'Done'),
                         ),

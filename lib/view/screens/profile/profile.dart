@@ -5,7 +5,6 @@ import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
 import 'package:game_of_fortune/view/screens/profile/my_account.dart';
-import 'package:game_of_fortune/view/screens/profile/settings.dart';
 import 'package:game_of_fortune/view/screens/profile/terms_and_conditions.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
@@ -108,9 +107,9 @@ class Profile extends StatelessWidget {
                 profiletile(() {
                   Get.to(() => MyAccount());
                 }, 'My Account'),
-                profiletile(() {
-                  Get.to(() => Settings());
-                }, 'Settings'),
+                // profiletile(() {
+                //   Get.to(() => Settings());
+                // }, 'Settings'),
                 profiletile(() {
                   Get.to(() => TermsConditions());
                 }, 'Terms and Conditions'),

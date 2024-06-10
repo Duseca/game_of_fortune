@@ -19,6 +19,7 @@ class GameController extends GetxController {
   Rx<PlayerModel> winner = PlayerModel().obs;
   RxBool isloading = false.obs;
   RewardedAd? rewardedAd;
+  RxBool lifeUpdated = false.obs;
   RxInt rewardedScore = 0.obs;
   RxList<ChoicesModel> selectedChoices = RxList<ChoicesModel>([]);
 
@@ -27,7 +28,7 @@ class GameController extends GetxController {
     super.onInit();
     await getAllPlayers();
     await getGame();
-    await addLife();
+    // await addLife();
   }
 
   getAllPlayers() async {
@@ -72,12 +73,19 @@ class GameController extends GetxController {
   }
 
   updateLives(String operator) async {
-    var updatedLives = operator == '+'
-        ? userModelGlobal.value.lives! + 1
-        : userModelGlobal.value.lives! - 1;
-    await playersCollection
-        .doc(auth.currentUser!.uid)
-        .update({'lives': updatedLives});
+    try {
+      log("message:: $operator");
+
+      var updatedLives = operator == '+'
+          ? userModelGlobal.value.lives! + 1
+          : userModelGlobal.value.lives! - 1;
+      log("message:: ${updatedLives}");
+      await playersCollection
+          .doc(auth.currentUser!.uid)
+          .update({'lives': updatedLives});
+    } catch (e) {
+      log("Exception::$e");
+    }
   }
 
   updateScores() async {

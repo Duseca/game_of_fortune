@@ -49,7 +49,7 @@ class AuthController extends GetxController {
           email: user.email,
           phoneNum: phoneNum.text.trim(),
           iso: isoCode.value,
-          lives: 5,
+          lives: 0,
         );
 
         bool isCreated = await FirebaseCRUDService.instance.createDocument(

@@ -67,9 +67,15 @@ class Home extends StatelessWidget {
                                           () => MyText(
                                             paddingBottom: 10,
                                             paddingTop: 10,
-                                            text: userModelGlobal.value.lives
-                                                .toString()
-                                                .padLeft(2, '0'),
+                                            text: userModelGlobal.value.lives !=
+                                                        null &&
+                                                    userModelGlobal
+                                                            .value.lives! <
+                                                        0
+                                                ? '0'
+                                                : userModelGlobal.value.lives
+                                                    .toString()
+                                                    .padLeft(2, '0'),
                                             color: kPrimaryColor,
                                             size: 22,
                                           ),
@@ -176,6 +182,7 @@ class Home extends StatelessWidget {
 }
 
 class OhSnap extends StatelessWidget {
+  final gameController = Get.find<GameController>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -233,6 +240,26 @@ class OhSnap extends StatelessWidget {
                             size: 50,
                             weight: FontWeight.w800,
                             color: kRedColor,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              gameController.showRewardedAd();
+                              Get.back();
+                            },
+                            child: Container(
+                              width: 150,
+                              decoration:
+                                  rounded2(kSecondaryColor, kTertiaryColor),
+                              child: Center(
+                                child: MyText(
+                                  paddingBottom: 10,
+                                  paddingTop: 10,
+                                  text: 'Watch Video',
+                                  color: kPrimaryColor,
+                                  size: 22,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
