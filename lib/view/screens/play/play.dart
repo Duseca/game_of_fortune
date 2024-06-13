@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
+import 'package:game_of_fortune/core/utils/dialogs.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
@@ -18,169 +20,189 @@ class Play extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: 44,
-                ),
-                CommonImageView(
-                  imagePath: Assets.imagesGE,
-                  height: 50,
-                  fit: BoxFit.contain,
-                ),
-                Obx(
-                  () => MyText(
-                    text: '${gameController.selectedChoices.length}/30',
-                    size: 18,
-                    weight: FontWeight.w500,
-                    textAlign: TextAlign.center,
-                    paddingTop: 10,
-                  ),
-                ),
-                Container(
-                  height: 90,
-                  width: Get.width,
-                  decoration: rounded(kSecondaryColor2),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      MyText(text: 'Play & Win'),
-                      Obx(
-                        () => MyText(
-                          text:
-                              '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
-                          size: 46,
-                          color: kSecondaryColor,
-                          weight: FontWeight.bold,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                MyText(
-                  text: 'Press left or right stepping stones to move on',
-                  size: 16,
-                  weight: FontWeight.w600,
-                  paddingBottom: 20,
-                  textAlign: TextAlign.center,
-                  paddingTop: 30,
-                ),
-              ],
-            ),
-            Flexible(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
+    return WillPopScope(
+      onWillPop: () async {
+        bool exitConfirmed = await showDialog(
+          context: context,
+          builder: (context) => Quit(),
+        );
+
+        // If the user confirms exit, exit the app
+        if (exitConfirmed == true) {
+          await gameController.updateScores();
+          gameController.selectedChoices.clear();
+          SystemNavigator.pop(); // Terminate the app
+        }
+        // Return true if the user confirms exit, false otherwise
+        return exitConfirmed;
+      },
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Row(
+                  SizedBox(
+                    height: 44,
+                  ),
+                  CommonImageView(
+                    imagePath: Assets.imagesGE,
+                    height: 50,
+                    fit: BoxFit.contain,
+                  ),
+                  Obx(
+                    () => MyText(
+                      text: '${gameController.selectedChoices.length}/30',
+                      size: 18,
+                      weight: FontWeight.w500,
+                      textAlign: TextAlign.center,
+                      paddingTop: 10,
+                    ),
+                  ),
+                  Container(
+                    height: 90,
+                    width: Get.width,
+                    decoration: rounded(kSecondaryColor2),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Expanded(
-                          child: MyButton(
-                            buttonText: 'Press',
-                            onTap: () {
-                              var left = Random.secure().nextBool();
-                              ChoicesModel choice =
-                                  ChoicesModel(left: left, right: !left);
-                              if (choice.left == true) {
-                                gameController.selectedChoices.add(choice);
-                                if (gameController.selectedChoices.length >=
-                                    30) {
-                                  Get.dialog(MoneyPrize());
-                                }
-                              } else {
-                                Get.dialog(GameOver());
-                              }
-                            },
+                        MyText(text: 'Play & Win'),
+                        Obx(
+                          () => MyText(
+                            text:
+                                '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
+                            size: 46,
+                            color: kSecondaryColor,
+                            weight: FontWeight.bold,
                           ),
-                        ),
-                        SizedBox(
-                          width: 60,
-                        ),
-                        Expanded(
-                          child: MyButton(
-                            buttonText: 'Press',
-                            onTap: () {
-                              var right = Random.secure().nextBool();
-                              ChoicesModel choice =
-                                  ChoicesModel(left: !right, right: right);
-                              if (choice.right == true) {
-                                gameController.selectedChoices.add(choice);
-                                if (gameController.selectedChoices.length ==
-                                    30) {
-                                  Get.dialog(MoneyPrize());
-                                }
-                                ;
-                              } else {
-                                Get.dialog(GameOver());
-                              }
-                            },
-                          ),
-                        ),
+                        )
                       ],
                     ),
                   ),
-                  Flexible(
-                    child: Obx(
-                      () => ListView.builder(
-                          shrinkWrap: true,
-                          reverse: true,
-                          itemCount: gameController.selectedChoices.length,
-                          padding: EdgeInsets.all(0),
-                          itemBuilder: (c, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 5),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      decoration: gameController
-                                                  .selectedChoices[index]
-                                                  .left ==
-                                              true
-                                          ? rounded2(
-                                              Color(0xff00A300),
-                                              Color(0xff00A300),
-                                            )
-                                          : rounded2(kGrey8Color, kGrey8Color),
-                                      height: 40,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 60,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      decoration: gameController
-                                                  .selectedChoices[index]
-                                                  .right ==
-                                              true
-                                          ? rounded2(
-                                              Color(0xff00A300),
-                                              Color(0xff00A300),
-                                            )
-                                          : rounded2(kGrey8Color, kGrey8Color),
-                                      height: 40,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                    ),
+                  MyText(
+                    text: 'Press left or right stepping stones to move on',
+                    size: 16,
+                    weight: FontWeight.w600,
+                    paddingBottom: 20,
+                    textAlign: TextAlign.center,
+                    paddingTop: 30,
                   ),
                 ],
               ),
-            ),
-          ],
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: MyButton(
+                              buttonText: 'Press',
+                              onTap: () {
+                                var left = Random.secure().nextBool();
+                                ChoicesModel choice =
+                                    ChoicesModel(left: left, right: !left);
+                                if (choice.left == true) {
+                                  gameController.selectedChoices.add(choice);
+                                  if (gameController.selectedChoices.length >=
+                                      30) {
+                                    Get.dialog(MoneyPrize());
+                                  }
+                                } else {
+                                  Get.dialog(GameOver());
+                                }
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            width: 60,
+                          ),
+                          Expanded(
+                            child: MyButton(
+                              buttonText: 'Press',
+                              onTap: () {
+                                var right = Random.secure().nextBool();
+                                ChoicesModel choice =
+                                    ChoicesModel(left: !right, right: right);
+                                if (choice.right == true) {
+                                  gameController.selectedChoices.add(choice);
+                                  if (gameController.selectedChoices.length ==
+                                      30) {
+                                    Get.dialog(MoneyPrize());
+                                  }
+                                  ;
+                                } else {
+                                  Get.dialog(GameOver());
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Flexible(
+                      child: Obx(
+                        () => ListView.builder(
+                            shrinkWrap: true,
+                            reverse: true,
+                            itemCount: gameController.selectedChoices.length,
+                            padding: EdgeInsets.all(0),
+                            itemBuilder: (c, index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        decoration: gameController
+                                                    .selectedChoices[index]
+                                                    .left ==
+                                                true
+                                            ? rounded2(
+                                                Color(0xff00A300),
+                                                Color(0xff00A300),
+                                              )
+                                            : rounded2(
+                                                kGrey8Color, kGrey8Color),
+                                        height: 40,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 60,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        decoration: gameController
+                                                    .selectedChoices[index]
+                                                    .right ==
+                                                true
+                                            ? rounded2(
+                                                Color(0xff00A300),
+                                                Color(0xff00A300),
+                                              )
+                                            : rounded2(
+                                                kGrey8Color, kGrey8Color),
+                                        height: 40,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -210,6 +232,7 @@ class _GameOverState extends State<GameOver> {
         //   gameController.lifeUpdated(true);
         //   await gameController.updateLives('-');
         // }
+        // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
         await gameController.updateScores();
         gameController.selectedChoices.clear();
         return await true;
@@ -542,7 +565,7 @@ class Quit extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: MyButton(
                                   onTap: () {
-                                    Get.dialog(MoneyPrize());
+                                    Navigator.of(context).pop(false);
                                   },
                                   buttonText: 'No'),
                             ),
@@ -554,7 +577,7 @@ class Quit extends StatelessWidget {
                                   backgroundColor: kPrimaryColor,
                                   fontColor: kBlackColor,
                                   onTap: () {
-                                    Get.dialog(MoneyPrize());
+                                    Navigator.of(context).pop(true);
                                   },
                                   buttonText: 'Yes'),
                             ),
