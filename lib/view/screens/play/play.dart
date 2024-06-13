@@ -206,10 +206,10 @@ class _GameOverState extends State<GameOver> {
     return WillPopScope(
       onWillPop: () async {
         print("swsqwswq ${gameController.lifeUpdated.value}");
-        if (gameController.lifeUpdated.isFalse) {
-          gameController.lifeUpdated(true);
-          await gameController.updateLives('-');
-        }
+        // if (gameController.lifeUpdated.isFalse) {
+        //   gameController.lifeUpdated(true);
+        //   await gameController.updateLives('-');
+        // }
         await gameController.updateScores();
         gameController.selectedChoices.clear();
         return await true;
@@ -272,23 +272,19 @@ class _GameOverState extends State<GameOver> {
                           padding: const EdgeInsets.all(8.0),
                           child: MyButton(
                               onTap: () async {
-                                if (gameController.lifeUpdated.isFalse) {
-                                  print(
-                                      "jdscw ${gameController.lifeUpdated.value}");
-                                  gameController.lifeUpdated(true);
-                                  print(
-                                      "jdscw ${gameController.lifeUpdated.value}");
-                                  await gameController.updateLives('-');
-                                  await gameController.updateScores();
-                                  gameController.selectedChoices.clear();
-                                  Get.back();
-                                  Get.back();
-                                } else {
-                                  await gameController.updateScores();
-                                  gameController.selectedChoices.clear();
-                                  Get.back();
-                                  Get.back();
-                                }
+                                // if (gameController.lifeUpdated.isFalse) {
+                                //   gameController.lifeUpdated(true);
+                                //   await gameController.updateLives('-');
+                                await gameController.updateScores();
+                                gameController.selectedChoices.clear();
+                                Get.back();
+                                Get.back();
+                                // } else {
+                                //   await gameController.updateScores();
+                                //   gameController.selectedChoices.clear();
+                                //   Get.back();
+                                //   Get.back();
+                                // }
                               },
                               buttonText: 'Done'),
                         ),

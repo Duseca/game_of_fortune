@@ -14,7 +14,7 @@ class GameModel {
     gameId = map.containsKey('gameId') ? gameId = map['gameId'] : '';
     lastWonBy =
         map.containsKey('lastWonBy') ? lastWonBy = map['lastWonBy'] : '';
-    prize = map.containsKey('prize') ? prize = map['prize'] : '';
+    prize = map.containsKey('prize') ? prize = map['prize'] : '0';
     canReplayAfter = map.containsKey('canReplayAfter')
         ? canReplayAfter = map['canReplayAfter'].toDate()
         : DateTime.now();

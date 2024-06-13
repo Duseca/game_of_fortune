@@ -13,7 +13,8 @@ class BottomNavBar extends StatefulWidget {
   State<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends State<BottomNavBar>
+    with WidgetsBindingObserver {
   late List<Map<String, dynamic>> items;
   int currentIndex = 0;
 

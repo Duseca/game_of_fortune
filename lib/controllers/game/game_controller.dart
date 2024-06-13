@@ -26,6 +26,7 @@ class GameController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    isloading(false);
     await getAllPlayers();
     await getGame();
     // await addLife();
@@ -141,36 +142,41 @@ class GameController extends GetxController {
             game.value.canReplayAfter!.isBefore(DateTime.now()));
   }
 
-  void createRewardedAd() {
-    RewardedAd.load(
+  createRewardedAd() async {
+    await RewardedAd.load(
         adUnitId: AdService.rewardedAdUnitId!,
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
           rewardedAd = ad;
         }, onAdFailedToLoad: (ad) {
+          log("message:: ${ad.message}, ${ad.code}");
           rewardedAd = null;
         }));
   }
 
-  void showRewardedAd() {
+  showRewardedAd() async {
     try {
-      createRewardedAd();
-      if (rewardedAd != null) {
-        rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-          onAdDismissedFullScreenContent: (ad) {
-            ad.dispose();
-            createRewardedAd();
-          },
-          onAdFailedToShowFullScreenContent: (ad, error) {
-            ad.dispose();
-            createRewardedAd();
-          },
-        );
-        rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
-          await updateLives('+');
-        });
-        rewardedAd = null;
-      }
+      await createRewardedAd();
+
+      log("dscedsdwsdsdddddddd $rewardedAd");
+      Future.delayed((const Duration(milliseconds: 100)), () async {
+        if (rewardedAd != null) {
+          rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) async {
+              ad.dispose();
+              await createRewardedAd();
+            },
+            onAdFailedToShowFullScreenContent: (ad, error) async {
+              ad.dispose();
+              await createRewardedAd();
+            },
+          );
+          await rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
+            await updateLives('+');
+          });
+          rewardedAd = null;
+        }
+      });
     } catch (e) {
       log("Exception:::showRewardedAd():$e");
     }
@@ -179,6 +185,7 @@ class GameController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    isloading(false);
     gameStream.cancel();
     playersStream.cancel();
   }

@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
+import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/view/screens/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:game_of_fortune/view/screens/play/game_winner.dart';
 import 'package:game_of_fortune/view/screens/play/play.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
@@ -14,10 +16,30 @@ import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({super.key});
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final gameController = Get.find<GameController>();
+  @override
+  void initState() {
+    super.initState();
+    gameController.getGame();
+    // WidgetsBinding.instance.addObserver(this);
+  }
+
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   if (state == AppLifecycleState.resumed) {
+  //     Get.offAll(BottomNavBar(), binding: BottomBarBindings());
+
+  //     log('State Resumed');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -96,8 +118,8 @@ class Home extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     InkWell(
-                                      onTap: () {
-                                        gameController.showRewardedAd();
+                                      onTap: () async {
+                                        await gameController.showRewardedAd();
                                         log("message:shown ${userModelGlobal.value.lives}");
                                       },
                                       child: Container(
@@ -147,8 +169,9 @@ class Home extends StatelessWidget {
                                   paddingTop: 30,
                                 ),
                                 MyButton(
-                                    onTap: () {
+                                    onTap: () async {
                                       if (userModelGlobal.value.lives! > 0) {
+                                        await gameController.updateLives('-');
                                         Get.to(() => Play());
                                       } else {
                                         Get.dialog(OhSnap());
