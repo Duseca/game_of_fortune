@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:game_of_fortune/view/constants/app_colors.dart';
 import 'package:game_of_fortune/view/constants/app_sizes.dart';
@@ -76,7 +77,7 @@ class Play extends StatelessWidget {
                         MyButton(
                           buttonText: 'Press',
                           onTap: () {
-                            Get.dialog(Congrats());
+                            Get.dialog(Quit());
                           },
                         ),
                         SizedBox(
@@ -391,6 +392,144 @@ class Congrats extends StatelessWidget {
                           // Solid text as fill.
                           Text(
                             'Congrats',
+                            style: TextStyle(
+                              letterSpacing: 1,
+                              fontSize: 20,
+                              color: Colors.grey[300],
+                            ),
+                          ),
+                        ],
+                      )))
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Quit extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color.fromRGBO(0, 0, 0, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: Container(
+                  padding: EdgeInsets.all(28),
+                  margin: AppSizes.DEFAULT,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: kPrimaryColor,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 8),
+                        color: kTertiaryColor,
+                        blurRadius: 0,
+                        spreadRadius: 0,
+                      ),
+                      BoxShadow(
+                        offset: Offset(0, 3),
+                        color: kSecondaryColor,
+                        blurRadius: 0,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SizedBox(
+                        height: 26,
+                      ),
+                      MyText(
+                        paddingTop: 20,
+                        text: 'Are you sure you want to Quit?',
+                        size: 19,
+                        weight: FontWeight.w600,
+                        textAlign: TextAlign.center,
+                        color: kSecondaryColor,
+                        paddingBottom: 20,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: MyButton(
+                                  onTap: () {
+                                    Get.dialog(MoneyPrize());
+                                  },
+                                  buttonText: 'No'),
+                            ),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: MyButton(
+                                  backgroundColor: kPrimaryColor,
+                                  fontColor: kBlackColor,
+                                  onTap: () {
+                                    Get.dialog(MoneyPrize());
+                                  },
+                                  buttonText: 'Yes'),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              Stack(
+                children: [
+                  Center(
+                    child: CommonImageView(
+                      imagePath: Assets.imagesRibbon,
+                      height: 94,
+                    ),
+                  ),
+                  SizedBox(
+                      height: 62,
+                      child: Center(
+                          child: Stack(
+                        children: <Widget>[
+                          // Stroked text as border.
+                          Text(
+                            'Confirm',
+                            style: TextStyle(
+                              fontSize: 20,
+                              letterSpacing: 1,
+                              shadows: [
+                                Shadow(
+                                  color: Colors
+                                      .black, // Choose the color of the first shadow
+                                  blurRadius:
+                                      0.0, // Adjust the blur radius for the first shadow effect
+                                  offset: Offset(2.0,
+                                      2.0), // Set the horizontal and vertical offset for the first shadow
+                                ),
+                              ],
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 2
+                                ..color = kSecondaryColor,
+                            ),
+                          ),
+                          // Solid text as fill.
+                          Text(
+                            'Confirm',
                             style: TextStyle(
                               letterSpacing: 1,
                               fontSize: 20,
