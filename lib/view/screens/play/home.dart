@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    gameController.createRewardedAd();
     gameController.getGame();
     // WidgetsBinding.instance.addObserver(this);
   }

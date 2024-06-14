@@ -142,8 +142,8 @@ class GameController extends GetxController {
             game.value.canReplayAfter!.isBefore(DateTime.now()));
   }
 
-  createRewardedAd() async {
-    await RewardedAd.load(
+  void createRewardedAd() {
+    RewardedAd.load(
         adUnitId: AdService.rewardedAdUnitId!,
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
@@ -156,27 +156,22 @@ class GameController extends GetxController {
 
   showRewardedAd() async {
     try {
-      await createRewardedAd();
-
-      log("dscedsdwsdsdddddddd $rewardedAd");
-      Future.delayed((const Duration(milliseconds: 100)), () async {
-        if (rewardedAd != null) {
-          rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) async {
-              ad.dispose();
-              await createRewardedAd();
-            },
-            onAdFailedToShowFullScreenContent: (ad, error) async {
-              ad.dispose();
-              await createRewardedAd();
-            },
-          );
-          await rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
-            await updateLives('+');
-          });
-          rewardedAd = null;
-        }
-      });
+      if (rewardedAd != null) {
+        rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (ad) {
+            ad.dispose();
+            createRewardedAd();
+          },
+          onAdFailedToShowFullScreenContent: (ad, error) {
+            ad.dispose();
+            createRewardedAd();
+          },
+        );
+        await rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
+          await updateLives('+');
+        });
+        rewardedAd = null;
+      }
     } catch (e) {
       log("Exception:::showRewardedAd():$e");
     }

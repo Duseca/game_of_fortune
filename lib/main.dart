@@ -13,10 +13,10 @@ void main() async {
   await MobileAds.instance.updateRequestConfiguration(
     RequestConfiguration(
       tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
-      testDeviceIds: <String>[
-        "3559F6861A199DE645DA48CA436D88EE",
-        "A521F63C415DD7E6629E16D13F0D01C7",
-      ],
+      // testDeviceIds: <String>[
+      //   "3559F6861A199DE645DA48CA436D88EE",
+      //   "A521F63C415DD7E6629E16D13F0D01C7",
+      // ],
     ),
   );
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
