@@ -142,7 +142,7 @@ class Players extends StatelessWidget {
                                         ),
                                       ),
                                       Positioned(
-                                        bottom: 10,
+                                        bottom: 4,
                                         right: 40,
                                         child: MyText(
                                           weight: FontWeight.bold,
