@@ -5,7 +5,6 @@ import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
-import 'package:game_of_fortune/core/utils/dialogs.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
