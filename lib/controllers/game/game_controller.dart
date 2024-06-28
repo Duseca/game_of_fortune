@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/core/utils/snackbars.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
@@ -171,6 +172,10 @@ class GameController extends GetxController {
           await updateLives('+');
         });
         rewardedAd = null;
+      } else {
+        CustomSnackBars.instance.showFailureSnackbar(
+            title: "Alert!",
+            message: "Currently no ads available, but coming soon!");
       }
     } catch (e) {
       log("Exception:::showRewardedAd():$e");

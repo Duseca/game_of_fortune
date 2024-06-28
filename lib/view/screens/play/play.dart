@@ -72,7 +72,7 @@ class Play extends StatelessWidget {
                         Obx(
                           () => MyText(
                             text:
-                                '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
+                                '\$${'${gameController.game.value.prize}'.toString().padLeft(2, '0')}',
                             size: 46,
                             color: kSecondaryColor,
                             weight: FontWeight.bold,
