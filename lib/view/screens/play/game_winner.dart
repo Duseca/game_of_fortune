@@ -79,7 +79,7 @@ class _GameWinnerState extends State<GameWinner> {
                         paddingBottom: 16,
                         size: 20,
                         text:
-                            "The winner has been found. Unfortunately it wasn’t you. Our next game will be released tomorrow at"),
+                            "The winner has been found. Our next game will be released tomorrow at"),
                     MyText(
                         lineHeight: 1,
                         paddingLeft: 20,

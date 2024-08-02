@@ -158,7 +158,7 @@ class Register extends StatelessWidget {
                         weight: FontWeight.bold,
                         color: kSecondaryColor,
                       ),
-                      MyText(text: 'of Game of Fortune '),
+                      // MyText(text: 'of Game of Fortune '),
                     ],
                   ),
                   SizedBox(

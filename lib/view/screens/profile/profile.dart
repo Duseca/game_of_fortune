@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
@@ -12,7 +13,8 @@ import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 import 'package:get/get.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+  Profile({super.key});
+  final authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -89,12 +91,10 @@ class Profile extends StatelessWidget {
                               weight: FontWeight.w500,
                             ),
                           ),
-                          Obx(
-                            () => MyText(
-                              textAlign: TextAlign.center,
-                              text: userModelGlobal.value.email!,
-                              weight: FontWeight.w400,
-                            ),
+                          MyText(
+                            textAlign: TextAlign.center,
+                            text: auth.currentUser!.email!,
+                            weight: FontWeight.w400,
                           ),
                         ],
                       ),
@@ -115,7 +115,10 @@ class Profile extends StatelessWidget {
                 }, 'Terms and Conditions'),
                 profiletile(() {
                   Get.dialog(Logout());
-                }, 'Log Out')
+                }, 'Log Out'),
+                profiletile(() async {
+                  await authController.deleteUserAccount();
+                }, 'Delete Account'),
               ],
             ),
           ),

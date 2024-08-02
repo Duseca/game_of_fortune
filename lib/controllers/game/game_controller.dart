@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/src/widgets/basic.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/core/utils/snackbars.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
 import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
+import 'package:game_of_fortune/view/screens/play_ad_video/play_video.dart';
+import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
+import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -171,6 +176,29 @@ class GameController extends GetxController {
           await updateLives('+');
         });
         rewardedAd = null;
+      } else {
+        // CustomSnackBars.instance.showFailureSnackbar(
+        //     title: "Alert!",
+        //     message: "Currently no ads available, but coming soon!");
+        // Get.defaultDialog(
+        //   title: 'Ads not ready yet!',
+        //   barrierDismissible: false,
+        //   content: Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: MyText(
+        //       text: 'Ads not ready yet, you are still awarded a life. Have fun !!',
+        //     ),
+        //   ),
+        //   confirm: Padding(
+        //     padding: const EdgeInsets.all(8.0),
+        //     child: MyBorderButton(buttonText: 'Okay', onTap: () async {
+        //       await updateLives('+');
+        //       Get.back();
+        //     }),
+        //   )
+        // );
+        Get.to(()=>VideoApp());
+        await updateLives('+');
       }
     } catch (e) {
       log("Exception:::showRewardedAd():$e");

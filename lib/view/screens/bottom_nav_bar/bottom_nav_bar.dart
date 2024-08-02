@@ -46,7 +46,7 @@ class _BottomNavBarState extends State<BottomNavBar>
   final List<Widget> screens = [
     Home(),
     Players(),
-    const Profile(),
+    Profile(),
   ];
 
   @override

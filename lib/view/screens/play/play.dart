@@ -5,6 +5,7 @@ import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
@@ -72,7 +73,7 @@ class Play extends StatelessWidget {
                         Obx(
                           () => MyText(
                             text:
-                                '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
+                                '\$${'${gameController.game.value.prize}'.toString().padLeft(2, '0')}',
                             size: 46,
                             color: kSecondaryColor,
                             weight: FontWeight.bold,
@@ -127,6 +128,7 @@ class Play extends StatelessWidget {
                               buttonText: 'Press',
                               onTap: () {
                                 var right = Random.secure().nextBool();
+                                // var right = true;
                                 ChoicesModel choice =
                                     ChoicesModel(left: !right, right: right);
                                 if (choice.right == true) {
@@ -734,7 +736,8 @@ class MoneyPrize extends StatelessWidget {
                             )),
                             MyText(
                               paddingTop: 20,
-                              text: 'You are the Winner',
+                              text:
+                                  'You are the Winner\nYou will be contacted by our team at ${auth.currentUser!.email} to discuss prize distribution method.',
                               size: 19,
                               weight: FontWeight.w600,
                               textAlign: TextAlign.center,
@@ -747,7 +750,7 @@ class MoneyPrize extends StatelessWidget {
                             ),
                             MyText(
                               text:
-                                  '\$${'${gameController.game.value.prize}.'.toString().padRight(6, '0')}',
+                                  '\$${'${gameController.game.value.prize}'.toString()}',
                               textAlign: TextAlign.center,
                               size: 34,
                               weight: FontWeight.w800,

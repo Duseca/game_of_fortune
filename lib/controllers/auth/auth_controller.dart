@@ -14,7 +14,10 @@ import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_authentication.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
 import 'package:game_of_fortune/services/firebase/firebase_storage.dart';
+import 'package:game_of_fortune/view/screens/auth/login.dart';
 import 'package:game_of_fortune/view/screens/bottom_nav_bar/bottom_nav_bar.dart';
+import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
+import 'package:game_of_fortune/view/widgets/my_text_field_widget.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -157,6 +160,77 @@ class AuthController extends GetxController {
         docId: auth.currentUser!.uid,
         key: 'img',
         value: downloadUrl);
+  }
+
+  Future<void> deleteUserAccount() async {
+    try {
+      await FirebaseCRUDService.instance.deleteDocument(
+          collection: playersCollection, docId: auth.currentUser!.uid);
+
+      await FirebaseAuth.instance.currentUser!.delete();
+      await auth.signOut();
+      Get.offAll(Login());
+      CustomSnackBars.instance.showSuccessSnackbar(
+        title: "Done",
+        message: "Account Deleted Suucessfully",
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "requires-recent-login") {
+        await _reauthenticateAndDelete();
+      } else {
+        // Handle other Firebase exceptions
+      }
+    } catch (e) {
+      throw Exception(e);
+
+      // Handle general exception
+    }
+  }
+
+  Future<void> _reauthenticateAndDelete() async {
+    try {
+      Get.dialog(Material(
+        color: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            MyTextField(
+              controller: password,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            MyButton(
+                onTap: () async {
+                  try {
+                    AuthCredential credential = EmailAuthProvider.credential(
+                        email: auth.currentUser!.email!,
+                        password: password.text.trim());
+                    await auth.currentUser!
+                        .reauthenticateWithCredential(credential);
+                    await auth.currentUser?.delete();
+                    await auth.signOut();
+                    Get.offAll(Login());
+                    Get.find();
+                  } on FirebaseAuthException catch (e) {
+                    Get.back();
+                    CustomSnackBars.instance
+                        .showFailureSnackbar(title: 'Alert!', message: '$e');
+                    print('Reauthentication failed: $e');
+                    // Handle error appropriately
+                  }
+                },
+                buttonText: 'Verify')
+          ],
+        ),
+      ));
+
+      CustomSnackBars.instance.showSuccessSnackbar(
+          title: "Done", message: "Account Deleted Suucessfully");
+    } catch (e) {
+      // Handle exceptions
+    }
   }
 
   @override
