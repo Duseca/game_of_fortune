@@ -205,6 +205,38 @@ class FirebaseAuthService extends GetxController {
     }
   }
 
+  Future<void> deleteUserAccount() async {
+    try {
+      await FirebaseAuth.instance.currentUser!.delete();
+      CustomSnackBars.instance.showSuccessSnackbar(
+        title: "Done",
+        message: "Account Deleted Suucessfully",
+      );
+    } on FirebaseAuthException catch (e) {
+      if (e.code == "requires-recent-login") {
+        await _reauthenticateAndDelete();
+      } else {
+        // Handle other Firebase exceptions
+      }
+    } catch (e) {
+      throw Exception(e);
+
+      // Handle general exception
+    }
+  }
+
+  Future<void> _reauthenticateAndDelete() async {
+    try {
+      var currentUser = FirebaseAuth.instance.currentUser;
+
+      await currentUser?.delete();
+      CustomSnackBars.instance.showSuccessSnackbar(
+          title: "Done", message: "Account Deleted Suucessfully");
+    } catch (e) {
+      // Handle exceptions
+    }
+  }
+
   logOut() async {
     await auth.signOut();
     Get.offAll(Login());
