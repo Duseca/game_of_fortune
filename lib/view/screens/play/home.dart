@@ -122,10 +122,11 @@ class Home extends StatelessWidget {
                     paddingTop: 30,
                   ),
                   MyButton(
+                      mBottom: 180,
                       onTap: () {
                         Get.to(() => Play());
                       },
-                      buttonText: 'Play')
+                      buttonText: 'Play'),
                 ],
               ),
             ),
