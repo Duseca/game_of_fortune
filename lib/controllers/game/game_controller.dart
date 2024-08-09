@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/src/widgets/basic.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
-import 'package:game_of_fortune/core/utils/snackbars.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
 import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
 import 'package:game_of_fortune/view/screens/play_ad_video/play_video.dart';
-import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
-import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -34,7 +30,6 @@ class GameController extends GetxController {
     isloading(false);
     await getAllPlayers();
     await getGame();
-    // await addLife();
   }
 
   getAllPlayers() async {
@@ -102,13 +97,14 @@ class GameController extends GetxController {
         'scoredDate': DateTime.now()
       });
     }
+    await updatePrizepool();
   }
 
   updateReplayDuration() async {
     await gameCollection.doc(game.value.gameId).update({
       'canReplayAfter': DateTime.now().add(const Duration(days: 1)),
       'lastWonBy': auth.currentUser!.uid,
-      'prize': game.value.prize! * 2,
+      'prize': double.parse(game.value.prize ?? '0') * 2,
     });
   }
 
@@ -197,12 +193,27 @@ class GameController extends GetxController {
         //     }),
         //   )
         // );
-        Get.to(()=>VideoApp());
+        Get.to(() => VideoApp());
         await updateLives('+');
       }
     } catch (e) {
       log("Exception:::showRewardedAd():$e");
     }
+  }
+
+  updatePrizepool() async {
+    var count = 0;
+    if (game.value.playCount == null ||
+        (game.value.playCount != null && game.value.playCount! < 9)) {
+      count += 1;
+    } else if (game.value.playCount == 9) {
+      var prizePool = double.tryParse(game.value.prize ?? '0.0')! + 0.01;
+      log("message: $prizePool");
+      await gameCollection
+          .doc(game.value.gameId)
+          .update({'prize': prizePool.toString()});
+    }
+    await gameCollection.doc(game.value.gameId).update({'playCount': count});
   }
 
   @override

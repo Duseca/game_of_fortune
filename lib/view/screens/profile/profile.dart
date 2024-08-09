@@ -12,6 +12,8 @@ import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 import 'package:get/get.dart';
 
+import '../../widgets/delete_account.dart';
+
 class Profile extends StatelessWidget {
   Profile({super.key});
   final authController = Get.find<AuthController>();
@@ -117,7 +119,8 @@ class Profile extends StatelessWidget {
                   Get.dialog(Logout());
                 }, 'Log Out'),
                 profiletile(() async {
-                  await authController.deleteUserAccount();
+                  await Get.dialog(DeleteAccount());
+//                  await authController.deleteUserccount();
                 }, 'Delete Account'),
               ],
             ),

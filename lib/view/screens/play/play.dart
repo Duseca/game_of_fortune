@@ -768,12 +768,6 @@ class MoneyPrize extends StatelessWidget {
                               weight: FontWeight.w800,
                               color: kBlueColor,
                             ),
-                            // MyText(
-                            //   paddingTop: 20,
-                            //   text: 'Please verify your email to get the reward',
-                            //   paddingBottom: 20,
-                            //   textAlign: TextAlign.center,
-                            // ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: MyButton(

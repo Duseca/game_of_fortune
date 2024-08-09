@@ -28,7 +28,6 @@ class _HomeState extends State<Home> {
     super.initState();
     gameController.createRewardedAd();
     gameController.getGame();
-    // WidgetsBinding.instance.addObserver(this);
   }
 
   // @override
@@ -61,13 +60,14 @@ class _HomeState extends State<Home> {
               () => gameController.isloading.isFalse
                   ? ListView(
                       shrinkWrap: true,
+                      physics: BouncingScrollPhysics(),
                       children: [
                         Visibility(
                           visible: gameController.canReplay(),
                           child: ListView(
                             shrinkWrap: true,
                             padding: AppSizes.DEFAULT,
-                            physics: const BouncingScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               MyText(
                                 paddingTop: 30,
@@ -167,6 +167,7 @@ class _HomeState extends State<Home> {
                                 paddingTop: 30,
                               ),
                               MyButton(
+                                  mBottom: 120,
                                   onTap: () async {
                                     if (userModelGlobal.value.lives! > 0) {
                                       await gameController.updateLives('-');
@@ -175,7 +176,11 @@ class _HomeState extends State<Home> {
                                       Get.dialog(OhSnap());
                                     }
                                   },
-                                  buttonText: 'Play')
+                                  buttonText: 'Play'),
+                              // Container(
+                              //   color: Colors.amber,
+                              //   height: 0,
+                              // ),
                             ],
                           ),
                         ),
