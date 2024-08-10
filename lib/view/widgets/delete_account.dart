@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
@@ -64,8 +65,9 @@ class DeleteAccount extends StatelessWidget {
                             Expanded(
                               child: MyButton(
                                 onTap: () async {
-                                  await FirebaseAuthService.instance
-                                      .deleteUserAccount();
+                                  Get.back();
+                                  await Get.find<AuthController>()
+                                      .deleteUserAccount(context);
                                 },
                                 backgroundColor: kRedColor,
                                 buttonText: "Yes, I'm sure",
