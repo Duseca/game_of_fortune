@@ -10,6 +10,7 @@ import 'package:game_of_fortune/core/enums/network_status.dart';
 import 'package:game_of_fortune/core/utils/dialogs.dart';
 import 'package:game_of_fortune/core/utils/network_connectivity.dart';
 import 'package:game_of_fortune/core/utils/snackbars.dart';
+import 'package:game_of_fortune/core/utils/validators.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_authentication.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
@@ -162,74 +163,94 @@ class AuthController extends GetxController {
         value: downloadUrl);
   }
 
-  Future<void> deleteUserAccount() async {
+  Future<void> deleteUserAccount(BuildContext context) async {
     try {
+      DialogService.instance.showProgressDialog(context: context);
       await FirebaseCRUDService.instance.deleteDocument(
           collection: playersCollection, docId: auth.currentUser!.uid);
 
       await FirebaseAuth.instance.currentUser!.delete();
       await auth.signOut();
+      DialogService.instance.hideLoading();
       Get.offAll(Login());
       CustomSnackBars.instance.showSuccessSnackbar(
         title: "Done",
         message: "Account Deleted Suucessfully",
       );
     } on FirebaseAuthException catch (e) {
+      DialogService.instance.hideLoading();
+
       if (e.code == "requires-recent-login") {
-        await _reauthenticateAndDelete();
-      } else {
-        // Handle other Firebase exceptions
+        await reauthenticateAndDelete(context);
       }
     } catch (e) {
+      DialogService.instance.hideLoading();
       throw Exception(e);
-
-      // Handle general exception
     }
   }
 
-  Future<void> _reauthenticateAndDelete() async {
+  Future<void> reauthenticateAndDelete(BuildContext context) async {
     try {
-      Get.dialog(Material(
-        color: Colors.transparent,
-        surfaceTintColor: Colors.transparent,
-        child: ListView(
-          shrinkWrap: true,
-          children: [
-            MyTextField(
-              controller: password,
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            MyButton(
-                onTap: () async {
-                  try {
-                    AuthCredential credential = EmailAuthProvider.credential(
-                        email: auth.currentUser!.email!,
-                        password: password.text.trim());
-                    await auth.currentUser!
-                        .reauthenticateWithCredential(credential);
-                    await auth.currentUser?.delete();
-                    await auth.signOut();
-                    Get.offAll(Login());
-                    Get.find();
-                  } on FirebaseAuthException catch (e) {
-                    Get.back();
-                    CustomSnackBars.instance
-                        .showFailureSnackbar(title: 'Alert!', message: '$e');
-                    print('Reauthentication failed: $e');
-                    // Handle error appropriately
-                  }
-                },
-                buttonText: 'Verify')
-          ],
-        ),
-      ));
-
-      CustomSnackBars.instance.showSuccessSnackbar(
-          title: "Done", message: "Account Deleted Suucessfully");
+      showDialog(
+          context: Get.context!,
+          builder: (c) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              surfaceTintColor: Colors.white,
+              insetPadding: EdgeInsets.symmetric(horizontal: 10),
+              content: SizedBox(
+                width: Get.width * 0.7,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    MyTextField(
+                      controller: password,
+                      isObSecure: true,
+                      label: 'Password',
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    MyButton(
+                        onTap: () async {
+                          if (password.text.trim().isNotEmpty) {
+                            try {
+                              AuthCredential credential =
+                                  EmailAuthProvider.credential(
+                                      email: auth.currentUser!.email!,
+                                      password: password.text.trim());
+                              await auth.currentUser!
+                                  .reauthenticateWithCredential(credential);
+                              await auth.currentUser?.delete();
+                              await auth.signOut();
+                              Get.offAll(Login());
+                              CustomSnackBars.instance.showSuccessSnackbar(
+                                  title: "Done",
+                                  message: "Account Deleted Suucessfully");
+                            } on FirebaseAuthException catch (e) {
+                              Get.back();
+                              CustomSnackBars.instance.showFailureSnackbar(
+                                  title: 'Alert!', message: '$e');
+                              print('Reauthentication failed: $e');
+                              // Handle error appropriately
+                            }
+                          } else {
+                            Get.back();
+                            CustomSnackBars.instance.showFailureSnackbar(
+                                title: 'Alert!',
+                                message:
+                                    'Request failed. password is required');
+                          }
+                        },
+                        buttonText: 'Verify')
+                  ],
+                ),
+              ),
+            );
+          });
     } catch (e) {
       // Handle exceptions
+      log("eee: $e");
     }
   }
 
