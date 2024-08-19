@@ -104,59 +104,64 @@ class Players extends StatelessWidget {
                             ],
                           ),
                         ),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: gameController.players.length,
-                            itemBuilder: (c, index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 9.0),
-                                child: Container(
-                                  decoration: rounded(Colors.white),
-                                  child: Stack(
-                                    children: [
-                                      ListTile(
-                                        leading: CommonImageView(
-                                          url: gameController
-                                                  .players[index].img ??
-                                              dummyimg3,
-                                          fit: BoxFit.cover,
-                                          radius: 200,
-                                          width: 50,
-                                          height: 50,
+                        Expanded(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: gameController.players.length,
+                              itemBuilder: (c, index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 9.0),
+                                  child: Container(
+                                    decoration: rounded(Colors.white),
+                                    child: Stack(
+                                      children: [
+                                        ListTile(
+                                          leading: CommonImageView(
+                                            url: gameController
+                                                    .players[index].img ??
+                                                dummyimg3,
+                                            fit: BoxFit.cover,
+                                            radius: 200,
+                                            width: 50,
+                                            height: 50,
+                                          ),
+                                          title: MyText(
+                                            text:
+                                                '${gameController.players[index].fName} ${gameController.players[index].lName}',
+                                            paddingBottom: 10,
+                                            weight: FontWeight.w500,
+                                          ),
+                                          subtitle: MyText(
+                                            text:
+                                                '${DateFormat('dd MMM yyyy').format(gameController.players[index].scoredDate!)}',
+                                            color: kGrey8Color,
+                                          ),
+                                          trailing: MyText(
+                                            text: 'Highest Score',
+                                            paddingBottom: 24,
+                                          ),
                                         ),
-                                        title: MyText(
-                                          text:
-                                              '${gameController.players[index].fName} ${gameController.players[index].lName}',
-                                          paddingBottom: 10,
-                                          weight: FontWeight.w500,
-                                        ),
-                                        subtitle: MyText(
-                                          text:
-                                              '${DateFormat('dd MMM yyyy').format(gameController.players[index].scoredDate!)}',
-                                          color: kGrey8Color,
-                                        ),
-                                        trailing: MyText(
-                                          text: 'Highest Score',
-                                          paddingBottom: 24,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 4,
-                                        right: 40,
-                                        child: MyText(
-                                          weight: FontWeight.bold,
-                                          text:
-                                              '${gameController.players[index].highestScore}',
-                                          size: 30,
-                                          color: kSecondaryColor,
-                                        ),
-                                      )
-                                    ],
+                                        Positioned(
+                                          bottom: 4,
+                                          right: 40,
+                                          child: MyText(
+                                            weight: FontWeight.bold,
+                                            text:
+                                                '${gameController.players[index].highestScore}',
+                                            size: 30,
+                                            color: kSecondaryColor,
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
+                        SizedBox(
+                          height: 100,
+                        ),
                       ],
                     ),
                   )

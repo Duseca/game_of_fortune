@@ -1,18 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/core/utils/snackbars.dart';
+import 'package:get/get.dart';
 import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
-import 'package:game_of_fortune/core/constants/app_images/assets.dart';
-import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
+import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/view/screens/profile/my_account.dart';
 import 'package:game_of_fortune/view/screens/profile/terms_and_conditions.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
-import 'package:get/get.dart';
-
 import '../../widgets/delete_account.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatelessWidget {
   Profile({super.key});
@@ -112,8 +115,22 @@ class Profile extends StatelessWidget {
                 // profiletile(() {
                 //   Get.to(() => Settings());
                 // }, 'Settings'),
-                profiletile(() {
-                  Get.to(() => TermsConditions());
+                profiletile(() async {
+                  // Get.to(() => TermsConditions());
+
+                  String url =
+                      'https://firebasestorage.googleapis.com/v0/b/game-of-fortune-6a305.appspot.com/o/Terms%20and%20conditions.pdf?alt=media&token=62f8c5b0-e779-457c-90d9-c8defd2a7d59';
+
+                  // if (await canLaunchUrl(Uri.parse(url))) {
+                  await launchUrl(Uri.parse(url));
+                  log("ffff ${Uri.parse(url)}");
+
+                  // } else {
+                  //   log("error: ");
+                  //   CustomSnackBars.instance.showFailureSnackbar(
+                  //       title: "Oh no!",
+                  //       message: "Couldn't load terms and conditions yet.");
+                  // }
                 }, 'Terms and Conditions'),
                 profiletile(() {
                   Get.dialog(Logout());
