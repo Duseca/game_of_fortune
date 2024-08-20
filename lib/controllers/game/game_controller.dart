@@ -205,14 +205,14 @@ class GameController extends GetxController {
     var count = 0;
     if (game.value.playCount == null ||
         (game.value.playCount != null && game.value.playCount! < 9)) {
-      count += 1;
+      count = game.value.playCount! + 1;
     } else if (game.value.playCount == 9) {
       var prizePool = double.tryParse(game.value.prize ?? '0.0')! + 0.01;
-      log("message: $prizePool");
       await gameCollection
           .doc(game.value.gameId)
           .update({'prize': prizePool.toString()});
     }
+
     await gameCollection.doc(game.value.gameId).update({'playCount': count});
   }
 
