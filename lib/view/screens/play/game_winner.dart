@@ -79,7 +79,7 @@ class _GameWinnerState extends State<GameWinner> {
                         paddingBottom: 16,
                         size: 20,
                         text:
-                            "The winner has been found. Our next game will be released tomorrow at"),
+                            "The winner has been found. Our next game will be released on ${DateFormat('dd MMM, yyyy').format(gameController.game.value.canReplayAfter!)} at"),
                     MyText(
                         lineHeight: 1,
                         paddingLeft: 20,
@@ -89,7 +89,7 @@ class _GameWinnerState extends State<GameWinner> {
                         color: kSecondaryColor,
                         weight: FontWeight.bold,
                         text:
-                            '${DateFormat('HH:mm').format(gameController.game.value.canReplayAfter!)}:00')
+                            '${DateFormat('jm').format(gameController.game.value.canReplayAfter!)}')
                   ],
                 ),
               ),

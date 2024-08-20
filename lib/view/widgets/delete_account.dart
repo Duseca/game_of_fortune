@@ -3,7 +3,6 @@ import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
 import 'package:get/get.dart';
 import '../../core/constants/app_colors.dart';
 import '../../core/constants/app_sizes.dart';
-import '../../services/firebase/firebase_authentication.dart';
 import 'my_button_widget.dart';
 import 'my_text_widget.dart';
 

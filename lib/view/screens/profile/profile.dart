@@ -1,7 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:game_of_fortune/core/utils/snackbars.dart';
+import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:get/get.dart';
 import 'package:game_of_fortune/controllers/auth/auth_controller.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
@@ -15,11 +13,11 @@ import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 import '../../widgets/delete_account.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Profile extends StatelessWidget {
   Profile({super.key});
   final authController = Get.find<AuthController>();
+  final gameController = Get.find<GameController>();
 
   @override
   Widget build(BuildContext context) {
@@ -112,25 +110,9 @@ class Profile extends StatelessWidget {
                 profiletile(() {
                   Get.to(() => MyAccount());
                 }, 'My Account'),
-                // profiletile(() {
-                //   Get.to(() => Settings());
-                // }, 'Settings'),
                 profiletile(() async {
-                  // Get.to(() => TermsConditions());
-
-                  String url =
-                      'https://firebasestorage.googleapis.com/v0/b/game-of-fortune-6a305.appspot.com/o/Terms%20and%20conditions.pdf?alt=media&token=62f8c5b0-e779-457c-90d9-c8defd2a7d59';
-
-                  // if (await canLaunchUrl(Uri.parse(url))) {
-                  await launchUrl(Uri.parse(url));
-                  log("ffff ${Uri.parse(url)}");
-
-                  // } else {
-                  //   log("error: ");
-                  //   CustomSnackBars.instance.showFailureSnackbar(
-                  //       title: "Oh no!",
-                  //       message: "Couldn't load terms and conditions yet.");
-                  // }
+                  await gameController.getTermsCond();
+                  Get.to(() => TermsConditions());
                 }, 'Terms and Conditions'),
                 profiletile(() {
                   Get.dialog(Logout());

@@ -223,4 +223,12 @@ class GameController extends GetxController {
     gameStream.cancel();
     playersStream.cancel();
   }
+
+  getTermsCond() async {
+    await tcCollection.get().then((snapshot) {
+      if (snapshot.docs.isNotEmpty) {
+        termsCond.value = snapshot.docs.first.data()['termsAndConditions'];
+      }
+    });
+  }
 }
