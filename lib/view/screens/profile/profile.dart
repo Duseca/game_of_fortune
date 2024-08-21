@@ -116,21 +116,10 @@ class Profile extends StatelessWidget {
                 //   Get.to(() => Settings());
                 // }, 'Settings'),
                 profiletile(() async {
-                  // Get.to(() => TermsConditions());
 
                   String url =
                       'https://firebasestorage.googleapis.com/v0/b/game-of-fortune-6a305.appspot.com/o/Terms%20and%20conditions.pdf?alt=media&token=62f8c5b0-e779-457c-90d9-c8defd2a7d59';
-
-                  // if (await canLaunchUrl(Uri.parse(url))) {
-                  await launchUrl(Uri.parse(url));
-                  log("ffff ${Uri.parse(url)}");
-
-                  // } else {
-                  //   log("error: ");
-                  //   CustomSnackBars.instance.showFailureSnackbar(
-                  //       title: "Oh no!",
-                  //       message: "Couldn't load terms and conditions yet.");
-                  // }
+                          await launchUrl(Uri.parse(url));
                 }, 'Terms and Conditions'),
                 profiletile(() {
                   Get.dialog(Logout());
