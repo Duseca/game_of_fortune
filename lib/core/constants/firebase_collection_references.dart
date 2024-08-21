@@ -4,3 +4,5 @@ CollectionReference<Map<String, dynamic>> playersCollection =
     FirebaseFirestore.instance.collection("player");
 CollectionReference<Map<String, dynamic>> gameCollection =
     FirebaseFirestore.instance.collection("game");
+CollectionReference<Map<String, dynamic>> tcCollection =
+    FirebaseFirestore.instance.collection("termsAndConditions");

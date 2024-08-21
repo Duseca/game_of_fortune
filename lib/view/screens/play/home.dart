@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -13,6 +11,7 @@ import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -149,7 +148,7 @@ class _HomeState extends State<Home> {
                                     Obx(
                                       () => MyText(
                                         text:
-                                            '\$${'${gameController.game.value.prize}'.toString().padLeft(2, '0')}',
+                                            '\$${NumberFormat('#.000').format(double.tryParse(gameController.game.value.prize ?? '0'))}',
                                         size: 46,
                                         color: kSecondaryColor,
                                         weight: FontWeight.bold,

@@ -11,6 +11,7 @@ import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import '../../../core/constants/app_images/assets.dart';
 
@@ -73,7 +74,7 @@ class Play extends StatelessWidget {
                         Obx(
                           () => MyText(
                             text:
-                                '\$${'${gameController.game.value.prize}'.toString().padLeft(2, '0')}',
+                                '\$${NumberFormat('#.000').format(double.tryParse(gameController.game.value.prize ?? '0'))}',
                             size: 46,
                             color: kSecondaryColor,
                             weight: FontWeight.bold,
@@ -228,7 +229,6 @@ class _GameOverState extends State<GameOver> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        print("swsqwswq ${gameController.lifeUpdated.value}");
         // if (gameController.lifeUpdated.isFalse) {
         //   gameController.lifeUpdated(true);
         //   await gameController.updateLives('-');
