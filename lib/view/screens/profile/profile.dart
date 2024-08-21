@@ -111,6 +111,7 @@ class Profile extends StatelessWidget {
                   Get.to(() => MyAccount());
                 }, 'My Account'),
                 profiletile(() async {
+
                   await gameController.getTermsCond();
                   Get.to(() => TermsConditions());
                 }, 'Terms and Conditions'),
