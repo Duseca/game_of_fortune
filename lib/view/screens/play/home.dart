@@ -148,7 +148,7 @@ class _HomeState extends State<Home> {
                                     Obx(
                                       () => MyText(
                                         text:
-                                            '\$${NumberFormat('#.000').format(double.tryParse(gameController.game.value.prize ?? '0'))}',
+                                            '\$${(NumberFormat('#.000').format(double.tryParse(gameController.game.value.prize ?? '0')))}',
                                         size: 46,
                                         color: kSecondaryColor,
                                         weight: FontWeight.bold,

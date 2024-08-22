@@ -204,9 +204,9 @@ class GameController extends GetxController {
   updatePrizepool() async {
     var count = 0;
     if (game.value.playCount == null ||
-        (game.value.playCount != null && game.value.playCount! < 9)) {
+        (game.value.playCount != null && game.value.playCount! < 10)) {
       count = game.value.playCount! + 1;
-    } else if (game.value.playCount == 9) {
+    } else if (game.value.playCount == 10) {
       var prizePool = double.tryParse(game.value.prize ?? '0.0')! + 0.01;
       await gameCollection
           .doc(game.value.gameId)
