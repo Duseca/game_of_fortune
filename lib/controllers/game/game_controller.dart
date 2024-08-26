@@ -206,14 +206,15 @@ class GameController extends GetxController {
     if (game.value.playCount == null ||
         (game.value.playCount != null && game.value.playCount! < 10)) {
       count = game.value.playCount! + 1;
-    } else if (game.value.playCount == 10) {
+      await gameCollection.doc(game.value.gameId).update({'playCount': count});
+    }
+    if (game.value.playCount == 10) {
+      await gameCollection.doc(game.value.gameId).update({'playCount': 0});
       var prizePool = double.tryParse(game.value.prize ?? '0.0')! + 0.01;
       await gameCollection
           .doc(game.value.gameId)
           .update({'prize': prizePool.toString()});
     }
-
-    await gameCollection.doc(game.value.gameId).update({'playCount': count});
   }
 
   @override
