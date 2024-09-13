@@ -50,8 +50,8 @@ class Play extends StatelessWidget {
                     height: 44,
                   ),
                   CommonImageView(
-                    imagePath: Assets.imagesGE,
-                    height: 50,
+                    imagePath: Assets.imagesNewMainIcon,
+                    height: 80,
                     fit: BoxFit.contain,
                   ),
                   Obx(
@@ -74,7 +74,7 @@ class Play extends StatelessWidget {
                         Obx(
                           () => MyText(
                             text:
-                                '\$${NumberFormat('#,##,000.000').format(double.tryParse(gameController.game.value.prize ?? '0'))}',
+                                '\$${NumberFormat('#,##,000.00').format(double.tryParse(gameController.game.value.prize ?? '0'))}',
                             size: 46,
                             color: kSecondaryColor,
                             weight: FontWeight.bold,

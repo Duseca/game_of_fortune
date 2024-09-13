@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_fonts.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
@@ -10,6 +11,7 @@ class MyTextField extends StatelessWidget {
     this.controller,
     this.hint,
     this.label,
+    this.keyBoardType,
     this.onChanged,
     this.isObSecure = false,
     this.marginBottom = 16.0,
@@ -31,6 +33,7 @@ class MyTextField extends StatelessWidget {
   TextEditingController? controller;
   ValueChanged<String>? onChanged;
   bool? isObSecure, haveLabel, isReadOnly;
+  TextInputType? keyBoardType;
   double? marginBottom;
   int? maxLines;
   double? labelSize;
@@ -66,6 +69,7 @@ class MyTextField extends StatelessWidget {
               controller: controller,
               onChanged: onChanged,
               validator: validator ?? null,
+              keyboardType: keyBoardType??TextInputType.text,
               textInputAction: TextInputAction.next,
               obscureText: isObSecure!,
               obscuringCharacter: '*',

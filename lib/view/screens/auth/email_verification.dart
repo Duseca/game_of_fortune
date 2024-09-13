@@ -46,11 +46,14 @@ class _EmailVerificationState extends State<EmailVerification> {
             SizedBox(
               height: 20,
             ),
-            MyText(
-                lineHeight: 1.7,
-                paddingBottom: 40,
-                text:
-                    'Please click the account verification link we sent on your email address. If not found in inbox, check your spam folder as well.'),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MyText(
+                  lineHeight: 1.7,
+                  paddingBottom: 40,
+                  text:
+                      'Please click the account verification link we sent on your email address. If not found in inbox, check your spam folder as well.'),
+            ),
 
             SizedBox(
               height: 20,

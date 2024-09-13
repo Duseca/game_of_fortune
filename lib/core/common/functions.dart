@@ -1,18 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/core/utils/snackbars.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
+import 'package:game_of_fortune/view/screens/auth/login.dart';
+import 'package:get/get.dart';
 
 import '../constants/firebase_collection_references.dart';
 
 getUserDataStream({required String userId}) async {
   // getting user's data stream
-  await FirebaseCRUDService.instance
-      .getSingleDocStream(collectionReference: playersCollection, docId: userId)
-      .listen((DocumentSnapshot<Object?> event) {
-    userModelGlobal.value =
-        PlayerModel.fromMap(event.data() as Map<String, dynamic>);
-  });
+  try {
+    await FirebaseCRUDService.instance
+        .getSingleDocStream(
+        collectionReference: playersCollection, docId: userId)
+        .listen((DocumentSnapshot<Object?> event) {
+          if(event.data()!=null) {
+            userModelGlobal.value =
+                PlayerModel.fromMap(event.data() as Map<String, dynamic>);
+          }
+          else{
+            Get.offAll(()=>Login());
+            CustomSnackBars.instance.showFailureSnackbar(title: 'Error', message: 'Some error occurred. Please login again');
+
+          }
+    });
+  }
+  catch (e){
+
+    Get.offAll(()=>Login());
+    CustomSnackBars.instance.showFailureSnackbar(title: 'Error', message: 'Please login again');
+
+  }
 
   // you can cancel the stream if you wanna do
   // userDataStream.cancel();

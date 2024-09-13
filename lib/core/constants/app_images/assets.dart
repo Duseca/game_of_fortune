@@ -120,5 +120,8 @@ class Assets {
   /// Assets for imagesUserwhite
   /// assets/images/userwhite.png
   static const String imagesUserwhite = "assets/images/userwhite.png";
+  static const String imagesNewSplash = "assets/images/splash_new.png";
+  static const String imagesNewAppIcon = "assets/images/app_icon.png";
+  static const String imagesNewMainIcon = "assets/images/new_main.png";
 }
 

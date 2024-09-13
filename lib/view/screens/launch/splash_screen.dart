@@ -52,13 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-      decoration: const BoxDecoration(color: kSecondaryColor),
+      decoration: const BoxDecoration(color: kPrimaryColor),
       width: Get.width,
       height: Get.height,
       child: Center(
           child: CommonImageView(
-        imagePath: Assets.imagesLogo,
+        imagePath: Assets.imagesNewSplash,
         height: 280,
+        width: Get.width*0.8 ,
         fit: BoxFit.contain,
       )),
     ));

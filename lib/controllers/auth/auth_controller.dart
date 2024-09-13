@@ -41,34 +41,39 @@ class AuthController extends GetxController {
 
   //create player
   createPlayer(BuildContext context) async {
-    User? user = await FirebaseAuthService.instance.signUpUsingEmailAndPassword(
-        email: email.text.trim(), password: password.text.trim());
-    if (user != null) {
-      try {
-        DialogService.instance.showProgressDialog(context: context);
-        PlayerModel newPlayer = PlayerModel(
-          playerId: user.uid,
-          fName: fName.text.trim(),
-          lName: lName.text.trim(),
-          email: user.email,
-          phoneNum: phoneNum.text.trim(),
-          iso: isoCode.value,
-          lives: 0,
-        );
+    DialogService.instance.showProgressDialog(context: context);
+try {
+  User? user = await FirebaseAuthService.instance.signUpUsingEmailAndPassword(
+      email: email.text.trim(), password: password.text.trim());
+  if (user != null) {
+    try {
+      PlayerModel newPlayer = PlayerModel(
+        playerId: user.uid,
+        fName: fName.text.trim(),
+        lName: lName.text.trim(),
+        email: user.email,
+        phoneNum: phoneNum.text.trim(),
+        iso: isoCode.value,
+        lives: 0,
+      );
 
-        bool isCreated = await FirebaseCRUDService.instance.createDocument(
-            collectionReference: playersCollection,
-            docId: newPlayer.playerId!,
-            data: newPlayer.toMap());
-        DialogService.instance.hideLoading();
-        if (isCreated) {
-          Get.to(() => EmailVerification());
-        }
-      } catch (e) {
-        DialogService.instance.hideLoading();
-        print('Exception::createPlayer(): $e');
+      bool isCreated = await FirebaseCRUDService.instance.createDocument(
+          collectionReference: playersCollection,
+          docId: newPlayer.playerId!,
+          data: newPlayer.toMap());
+      DialogService.instance.hideLoading();
+      if (isCreated) {
+        Get.to(() => EmailVerification());
       }
+    } catch (e) {
+      DialogService.instance.hideLoading();
+      print('Exception::createPlayer(): $e');
     }
+  }
+}
+catch(e){
+  Get.back();
+}
   }
 
   //login user

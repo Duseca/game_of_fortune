@@ -193,6 +193,7 @@ class GameController extends GetxController {
         //     }),
         //   )
         // );
+
         Get.to(() => VideoApp());
         await updateLives('+');
       }

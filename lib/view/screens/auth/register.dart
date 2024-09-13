@@ -108,6 +108,7 @@ class Register extends StatelessWidget {
                       ),
                       hint: 'Enter phone number',
                       controller: authController.phoneNum,
+                      keyBoardType: TextInputType.number,
                       validator: (value) {
                         return ValidationService.instance.emptyValidator(value);
                       }),
@@ -129,7 +130,7 @@ class Register extends StatelessWidget {
                         return ValidationService.instance.emptyValidator(value);
                       }),
                   MyTextField(
-                      label: 'Password',
+                      label: 'Confirm Password',
                       suffix: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: CommonImageView(
@@ -140,6 +141,9 @@ class Register extends StatelessWidget {
                       hint: 'Repeat your Password',
                       controller: authController.confirmPass,
                       validator: (value) {
+                        if(value!.isNotEmpty&&value!=authController.password.text){
+                          return 'Passwords not same!';
+                        }
                         return ValidationService.instance.emptyValidator(value);
                       }),
                   Row(
@@ -168,6 +172,7 @@ class Register extends StatelessWidget {
                       onTap: () async {
                         if (_signupForm.currentState!.validate()) {
                           if (authController.acceptTerms.isTrue) {
+
                             await authController.createPlayer(context);
                           } else {
                             CustomSnackBars.instance.showFailureSnackbar(
