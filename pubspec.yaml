@@ -25,10 +25,11 @@ dependencies:
   fluttertoast: ^8.2.5
   get_storage: ^2.1.1
   firebase_core: ^2.31.0
-  google_mobile_ads: ^5.1.0
+  # google_mobile_ads: ^5.1.0
   video_player: 
   url_launcher: ^6.3.0
   flutter_html: ^3.0.0-beta.2
+  unity_ads_plugin: ^0.3.20
 
 dev_dependencies:
   flutter_test:

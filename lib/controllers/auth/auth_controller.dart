@@ -1,16 +1,13 @@
 import 'dart:developer';
-
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/core/common/functions.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
-import 'package:game_of_fortune/core/enums/network_status.dart';
 import 'package:game_of_fortune/core/utils/dialogs.dart';
-import 'package:game_of_fortune/core/utils/network_connectivity.dart';
 import 'package:game_of_fortune/core/utils/snackbars.dart';
-import 'package:game_of_fortune/core/utils/validators.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_authentication.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
@@ -21,7 +18,6 @@ import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_field_widget.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../view/screens/auth/email_verification.dart';
 
 class AuthController extends GetxController {
@@ -42,38 +38,38 @@ class AuthController extends GetxController {
   //create player
   createPlayer(BuildContext context) async {
     DialogService.instance.showProgressDialog(context: context);
-try {
-  User? user = await FirebaseAuthService.instance.signUpUsingEmailAndPassword(
-      email: email.text.trim(), password: password.text.trim());
-  if (user != null) {
     try {
-      PlayerModel newPlayer = PlayerModel(
-        playerId: user.uid,
-        fName: fName.text.trim(),
-        lName: lName.text.trim(),
-        email: user.email,
-        phoneNum: phoneNum.text.trim(),
-        iso: isoCode.value,
-        lives: 0,
-      );
+      User? user = await FirebaseAuthService.instance
+          .signUpUsingEmailAndPassword(
+              email: email.text.trim(), password: password.text.trim());
+      if (user != null) {
+        try {
+          PlayerModel newPlayer = PlayerModel(
+            playerId: user.uid,
+            fName: fName.text.trim(),
+            lName: lName.text.trim(),
+            email: user.email,
+            phoneNum: phoneNum.text.trim(),
+            iso: isoCode.value,
+            lives: 0,
+          );
 
-      bool isCreated = await FirebaseCRUDService.instance.createDocument(
-          collectionReference: playersCollection,
-          docId: newPlayer.playerId!,
-          data: newPlayer.toMap());
-      DialogService.instance.hideLoading();
-      if (isCreated) {
-        Get.to(() => EmailVerification());
+          bool isCreated = await FirebaseCRUDService.instance.createDocument(
+              collectionReference: playersCollection,
+              docId: newPlayer.playerId!,
+              data: newPlayer.toMap());
+          DialogService.instance.hideLoading();
+          if (isCreated) {
+            Get.to(() => EmailVerification());
+          }
+        } catch (e) {
+          DialogService.instance.hideLoading();
+          print('Exception::createPlayer(): $e');
+        }
       }
     } catch (e) {
-      DialogService.instance.hideLoading();
-      print('Exception::createPlayer(): $e');
+      Get.back();
     }
-  }
-}
-catch(e){
-  Get.back();
-}
   }
 
   //login user
@@ -105,56 +101,26 @@ catch(e){
   }
 
   resetPassword() async {
-    NetworkStatus status =
-        await NetworkConnectivity.instance.getNetworkStatus();
-
-    if (status == NetworkStatus.online) {
-      try {
-        await auth
-            .sendPasswordResetEmail(email: email.text.trim())
-            .then((value) {
-          log("message::::");
-          // Handle success (email sent) here if needed
-          CustomSnackBars.instance.showSuccessSnackbar(
-            title: 'Reset Link Sent',
-            message:
-                'Check your registered email address to find the password reset link',
-          );
-        }).catchError((error) {
-          // Handle errors here
-          if (error is FirebaseAuthException) {
-            switch (error.code) {
-              case 'user-not-found':
-                CustomSnackBars.instance.showFailureSnackbar(
-                  title: 'Password Reset Error',
-                  message: 'User not found. Please check the email address.',
-                );
-                break;
-              case 'invalid-email':
-                CustomSnackBars.instance.showFailureSnackbar(
-                  title: 'Password Reset Error',
-                  message: 'The email address is not valid.',
-                );
-                break;
-              // Add more cases to handle other error codes as needed
-
-              default:
-                // Handle generic error
-                CustomSnackBars.instance.showFailureSnackbar(
-                  title: 'Password Reset Error',
-                  message: 'An error occurred during password reset.',
-                );
-            }
-          } else {
-            // Handle other types of errors if needed
-          }
-        });
-      } catch (e) {
-        // Handle other exceptions if needed
-      }
-    } else {
+    try {
+      await auth.sendPasswordResetEmail(email: email.text.trim());
+      log("message::::");
+      // Handle success (email sent) here if needed
+      CustomSnackBars.instance.showSuccessSnackbar(
+        title: 'Reset Link Sent',
+        message:
+            'Check your registered email address to find the password reset link',
+      );
+    } on SocketException catch (e) {
       CustomSnackBars.instance.showFailureSnackbar(
-          title: "Error", message: "Please check your internet connection");
+          title: "Network Error!",
+          message: "Please check your internet connection");
+    } on FirebaseAuthException catch (e) {
+      CustomSnackBars.instance.showFailureSnackbar(
+          title: "Password Reset Error", message: "${e.message}");
+    } catch (e) {
+      CustomSnackBars.instance.showFailureSnackbar(
+          title: "Password Reset Error",
+          message: "Something went wrong. Please try again");
     }
   }
 

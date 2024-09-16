@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/config/routes/routes.dart';
@@ -5,20 +7,18 @@ import 'package:game_of_fortune/config/themes/light_theme.dart';
 import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
-  await MobileAds.instance.updateRequestConfiguration(
-    RequestConfiguration(
-      tagForChildDirectedTreatment: TagForChildDirectedTreatment.unspecified,
-      testDeviceIds: <String>[
-        // "5da0020eb149096a690d785eab8e5007",
-        // "A521F63C415DD7E6629E16D13F0D01C7",
-      ],
-    ),
+  await UnityAds.init(
+    gameId: Platform.isAndroid ? '5698309' : '5698308',
+    testMode: true,
+    onComplete: () => print("init complete"),
+    onFailed: (error, errorMessage) => print("init failed"),
   );
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }

@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:game_of_fortune/view/screens/play/home.dart';
 import 'package:game_of_fortune/view/screens/players/players.dart';
 import 'package:game_of_fortune/view/screens/profile/profile.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
+import 'package:get/get.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class BottomNavBar extends StatefulWidget {
 
 class _BottomNavBarState extends State<BottomNavBar>
     with WidgetsBindingObserver {
+  final gameController = Get.find<GameController>();
   late List<Map<String, dynamic>> items;
   int currentIndex = 0;
 
@@ -76,42 +79,46 @@ class _BottomNavBarState extends State<BottomNavBar>
           ],
           borderRadius: BorderRadius.circular(100),
         ),
-        child: BottomNavigationBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          onTap: (index) {
-            setState(() {
-              currentIndex = index;
-              log(currentIndex.toString());
-              updateItems(); // Update items when index changes
-            });
-          },
-          type: BottomNavigationBarType.fixed,
-          currentIndex: currentIndex,
-          selectedFontSize: 10,
-          unselectedFontSize: 10,
-          selectedLabelStyle: TextStyle(
-            fontFamily: AppFonts.OUTFIT,
-            color: kSecondaryColor,
-          ),
-          unselectedLabelStyle: TextStyle(
-            fontFamily: AppFonts.OUTFIT,
-            color: kGrey8Color,
-          ),
-          selectedItemColor: kSecondaryColor,
-          unselectedItemColor: kGrey8Color,
-          items: List.generate(
-            items.length,
-            (index) {
-              return BottomNavigationBarItem(
-                icon: CommonImageView(
-                  imagePath: items[index]['image'],
-                  width: 27,
-                ),
-                label: items[index]['label'],
-              );
-            },
-          ),
+        child: Column(
+          children: [
+            BottomNavigationBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              onTap: (index) {
+                setState(() {
+                  currentIndex = index;
+                  log(currentIndex.toString());
+                  updateItems(); // Update items when index changes
+                });
+              },
+              type: BottomNavigationBarType.fixed,
+              currentIndex: currentIndex,
+              selectedFontSize: 10,
+              unselectedFontSize: 10,
+              selectedLabelStyle: TextStyle(
+                fontFamily: AppFonts.OUTFIT,
+                color: kSecondaryColor,
+              ),
+              unselectedLabelStyle: TextStyle(
+                fontFamily: AppFonts.OUTFIT,
+                color: kGrey8Color,
+              ),
+              selectedItemColor: kSecondaryColor,
+              unselectedItemColor: kGrey8Color,
+              items: List.generate(
+                items.length,
+                (index) {
+                  return BottomNavigationBarItem(
+                    icon: CommonImageView(
+                      imagePath: items[index]['image'],
+                      width: 27,
+                    ),
+                    label: items[index]['label'],
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

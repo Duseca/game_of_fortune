@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
@@ -7,10 +8,9 @@ import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
-import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
-import 'package:game_of_fortune/view/screens/play_ad_video/play_video.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
+// import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GameController extends GetxController {
   late StreamSubscription<QuerySnapshot> playersStream;
@@ -19,7 +19,7 @@ class GameController extends GetxController {
   Rx<GameModel> game = GameModel().obs;
   Rx<PlayerModel> winner = PlayerModel().obs;
   RxBool isloading = false.obs;
-  RewardedAd? rewardedAd;
+  // RewardedAd? rewardedAd;
   RxBool lifeUpdated = false.obs;
   RxInt rewardedScore = 0.obs;
   RxList<ChoicesModel> selectedChoices = RxList<ChoicesModel>([]);
@@ -143,60 +143,74 @@ class GameController extends GetxController {
             game.value.canReplayAfter!.isBefore(DateTime.now()));
   }
 
-  void createRewardedAd() {
-    RewardedAd.load(
-        adUnitId: AdService.rewardedAdUnitId!,
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
-          rewardedAd = ad;
-        }, onAdFailedToLoad: (ad) {
-          log("message:: ${ad.message}, ${ad.code}");
-          rewardedAd = null;
-        }));
+  loadAd(String placementId) async {
+    await UnityAds.load(
+        placementId: placementId,
+        onComplete: (placementId) {
+          print('Load Complete $placementId');
+        },
+        onFailed: (placementId, error, message) {
+          print('Load Failed $placementId: $error $message');
+        });
   }
 
   showRewardedAd() async {
     try {
-      if (rewardedAd != null) {
-        rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-          onAdDismissedFullScreenContent: (ad) {
-            ad.dispose();
-            createRewardedAd();
-          },
-          onAdFailedToShowFullScreenContent: (ad, error) {
-            ad.dispose();
-            createRewardedAd();
-          },
-        );
-        await rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
-          await updateLives('+');
-        });
-        rewardedAd = null;
-      } else {
-        // CustomSnackBars.instance.showFailureSnackbar(
-        //     title: "Alert!",
-        //     message: "Currently no ads available, but coming soon!");
-        // Get.defaultDialog(
-        //   title: 'Ads not ready yet!',
-        //   barrierDismissible: false,
-        //   content: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: MyText(
-        //       text: 'Ads not ready yet, you are still awarded a life. Have fun !!',
-        //     ),
-        //   ),
-        //   confirm: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: MyBorderButton(buttonText: 'Okay', onTap: () async {
-        //       await updateLives('+');
-        //       Get.back();
-        //     }),
-        //   )
-        // );
-
-        Get.to(() => VideoApp());
-        await updateLives('+');
+      if (Platform.isAndroid) {
+        await UnityAds.showVideoAd(
+            placementId: 'Rewarded_Android',
+            onComplete: (String res) async {
+              print("object: res: $res");
+              await updateLives('+');
+            });
+      } else if (Platform.isIOS) {
+        await UnityAds.showVideoAd(
+            placementId: 'Rewarded_iOS',
+            onComplete: (String res) async {
+              print("object: res: $res");
+              await updateLives('+');
+            });
       }
+      // if (rewardedAd != null) {
+      //   rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+      //     onAdDismissedFullScreenContent: (ad) {
+      //       ad.dispose();
+      //       createRewardedAd();
+      //     },
+      //     onAdFailedToShowFullScreenContent: (ad, error) {
+      //       ad.dispose();
+      //       createRewardedAd();
+      //     },
+      //   );
+      //   await rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
+      //     await updateLives('+');
+      //   });
+      //   rewardedAd = null;
+      // } else {
+      //   // CustomSnackBars.instance.showFailureSnackbar(
+      //   //     title: "Alert!",
+      //   //     message: "Currently no ads available, but coming soon!");
+      //   // Get.defaultDialog(
+      //   //   title: 'Ads not ready yet!',
+      //   //   barrierDismissible: false,
+      //   //   content: Padding(
+      //   //     padding: const EdgeInsets.all(8.0),
+      //   //     child: MyText(
+      //   //       text: 'Ads not ready yet, you are still awarded a life. Have fun !!',
+      //   //     ),
+      //   //   ),
+      //   //   confirm: Padding(
+      //   //     padding: const EdgeInsets.all(8.0),
+      //   //     child: MyBorderButton(buttonText: 'Okay', onTap: () async {
+      //   //       await updateLives('+');
+      //   //       Get.back();
+      //   //     }),
+      //   //   )
+      //   // );
+
+      //   Get.to(() => VideoApp());
+      //   await updateLives('+');
+      // }
     } catch (e) {
       log("Exception:::showRewardedAd():$e");
     }
@@ -218,19 +232,19 @@ class GameController extends GetxController {
     }
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-    isloading(false);
-    gameStream.cancel();
-    playersStream.cancel();
-  }
-
   getTermsCond() async {
     await tcCollection.get().then((snapshot) {
       if (snapshot.docs.isNotEmpty) {
         termsCond.value = snapshot.docs.first.data()['termsAndConditions'];
       }
     });
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    isloading(false);
+    gameStream.cancel();
+    playersStream.cancel();
   }
 }

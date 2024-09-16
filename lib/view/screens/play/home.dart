@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -12,6 +14,7 @@ import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -25,181 +28,220 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    gameController.createRewardedAd();
     gameController.getGame();
+    gameController
+        .loadAd(Platform.isAndroid ? 'Rewarded_Android' : 'Rewarded_iOS');
   }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   if (state == AppLifecycleState.resumed) {
-  //     Get.offAll(BottomNavBar(), binding: BottomBarBindings());
-
-  //     log('State Resumed');
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: ListView(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          // crossAxisAlignment: CrossAxisAlignment.stretch,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              height: 20,
+            Stack(
+              alignment: AlignmentDirectional.topEnd,
+              children: [
+                Container(
+                  color: Colors.black,
+                  alignment: Alignment.center,
+                  width: Get.width,
+                  height: 60,
+                  child: UnityBannerAd(
+                    size: BannerSize.standard,
+                    placementId: 'Banner_Android',
+                    onLoad: (placementId) =>
+                        print('Banner loaded: $placementId'),
+                    onClick: (placementId) =>
+                        print('Banner clicked: $placementId'),
+                    onShown: (placementId) =>
+                        print('Banner shown: $placementId'),
+                    onFailed: (placementId, error, message) =>
+                        print('Banner Ad $placementId failed: $error $message'),
+                  ),
+                ),
+                Container(
+                  color: kPlaceHolderColor,
+                  padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+                  child: MyText(
+                    text: 'Ad',
+                    color: kPrimaryColor,
+                    size: 9,
+                  ),
+                ),
+              ],
             ),
-            CommonImageView(
-              imagePath: Assets.imagesNewMainIcon,
-              height: 80,
-              fit: BoxFit.contain,
-            ),
-            Obx(
-              () => gameController.isloading.isFalse
-                  ? ListView(
-                      shrinkWrap: true,
-                      physics: BouncingScrollPhysics(),
-                      children: [
-                        Visibility(
-                          visible: gameController.canReplay(),
-                          child: ListView(
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  CommonImageView(
+                    imagePath: Assets.imagesNewMainIcon,
+                    height: 80,
+                    fit: BoxFit.contain,
+                  ),
+                  Obx(
+                    () => gameController.isloading.isFalse
+                        ? ListView(
                             shrinkWrap: true,
-                            padding: AppSizes.DEFAULT,
-                            physics: const NeverScrollableScrollPhysics(),
+                            physics: BouncingScrollPhysics(),
                             children: [
-                              MyText(
-                                paddingTop: 30,
-                                text: 'Lives Remaining',
-                                size: 18,
-                                paddingBottom: 20,
-                                textAlign: TextAlign.center,
-                                weight: FontWeight.w600,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 150,
-                                    decoration: rounded2(
-                                        kSecondaryColor, kTertiaryColor),
-                                    child: Center(
-                                      child: Obx(
-                                        () => MyText(
-                                          paddingBottom: 10,
-                                          paddingTop: 10,
-                                          text: userModelGlobal.value.lives !=
-                                                      null &&
-                                                  userModelGlobal.value.lives! <
-                                                      0
-                                              ? '0'
-                                              : userModelGlobal.value.lives
-                                                  .toString()
-                                                  .padLeft(2, '0'),
-                                          color: kPrimaryColor,
-                                          size: 22,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              MyText(
-                                paddingTop: 30,
-                                text: 'Get Another Life',
-                                size: 18,
-                                paddingBottom: 20,
-                                textAlign: TextAlign.center,
-                                weight: FontWeight.w600,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      if(gameController.rewardedAd==null){
-                                        gameController.createRewardedAd();
-                                      }
-                                      await gameController.showRewardedAd();
-                                    },
-                                    child: Container(
-                                      width: 150,
-                                      decoration: rounded2(
-                                          kSecondaryColor, kTertiaryColor),
-                                      child: Center(
-                                        child: MyText(
-                                          paddingBottom: 10,
-                                          paddingTop: 10,
-                                          text: 'Watch Video',
-                                          color: kPrimaryColor,
-                                          size: 22,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 40),
-                              Container(
-                                height: 138,
-                                decoration: rounded(kSecondaryColor2),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                              Visibility(
+                                visible: gameController.canReplay(),
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  padding: AppSizes.DEFAULT,
+                                  physics: const NeverScrollableScrollPhysics(),
                                   children: [
-                                    MyText(text: 'Play & Win'),
-                                    Obx(
-                                      () => MyText(
-                                        text:
-                                            '\$${(NumberFormat('#,##,000.00').format(double.tryParse(gameController.game.value.prize ?? '0')))}',
-                                        size: 46,
-                                        color: kSecondaryColor,
-                                        weight: FontWeight.bold,
+                                    MyText(
+                                      paddingTop: 30,
+                                      text: 'Lives Remaining',
+                                      size: 18,
+                                      paddingBottom: 20,
+                                      textAlign: TextAlign.center,
+                                      weight: FontWeight.w600,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          decoration: rounded2(
+                                              kSecondaryColor, kTertiaryColor),
+                                          child: Center(
+                                            child: Obx(
+                                              () => MyText(
+                                                paddingBottom: 10,
+                                                paddingTop: 10,
+                                                text: userModelGlobal
+                                                                .value.lives !=
+                                                            null &&
+                                                        userModelGlobal
+                                                                .value.lives! <
+                                                            0
+                                                    ? '0'
+                                                    : userModelGlobal
+                                                        .value.lives
+                                                        .toString()
+                                                        .padLeft(2, '0'),
+                                                color: kPrimaryColor,
+                                                size: 22,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    MyText(
+                                      paddingTop: 30,
+                                      text: 'Get Another Life',
+                                      size: 18,
+                                      paddingBottom: 20,
+                                      textAlign: TextAlign.center,
+                                      weight: FontWeight.w600,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        InkWell(
+                                          onTap: () async {
+                                            // if(gameController.rewardedAd==null){
+                                            await gameController
+                                                .showRewardedAd();
+                                            // }
+                                            // await gameController.showRewardedAd();
+                                          },
+                                          child: Container(
+                                            width: 150,
+                                            decoration: rounded2(
+                                                kSecondaryColor,
+                                                kTertiaryColor),
+                                            child: Center(
+                                              child: MyText(
+                                                paddingBottom: 10,
+                                                paddingTop: 10,
+                                                text: 'Watch Video',
+                                                color: kPrimaryColor,
+                                                size: 22,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 40),
+                                    Container(
+                                      height: 138,
+                                      decoration: rounded(kSecondaryColor2),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          MyText(text: 'Play & Win'),
+                                          Obx(
+                                            () => MyText(
+                                              text:
+                                                  '\$${(NumberFormat('#,##,000.00').format(double.tryParse(gameController.game.value.prize ?? '0')))}',
+                                              size: 46,
+                                              color: kSecondaryColor,
+                                              weight: FontWeight.bold,
+                                            ),
+                                          )
+                                        ],
                                       ),
-                                    )
+                                    ),
+                                    MyText(
+                                      text: 'Playing cost one Life',
+                                      size: 16,
+                                      weight: FontWeight.w600,
+                                      paddingBottom: 20,
+                                      textAlign: TextAlign.center,
+                                      paddingTop: 30,
+                                    ),
+                                    MyButton(
+                                        mBottom: 120,
+                                        onTap: () async {
+                                          if (userModelGlobal.value.lives! >
+                                              0) {
+                                            await gameController
+                                                .updateLives('-');
+                                            Get.to(() => Play());
+                                          } else {
+                                            Get.dialog(OhSnap());
+                                          }
+                                        },
+                                        buttonText: 'Play'),
+                                    // Container(
+                                    //   color: Colors.amber,
+                                    //   height: 0,
+                                    // ),
                                   ],
                                 ),
                               ),
-                              MyText(
-                                text: 'Playing cost one Life',
-                                size: 16,
-                                weight: FontWeight.w600,
-                                paddingBottom: 20,
-                                textAlign: TextAlign.center,
-                                paddingTop: 30,
-                              ),
-                              MyButton(
-                                  mBottom: 120,
-                                  onTap: () async {
-                                    if (userModelGlobal.value.lives! > 0) {
-                                      await gameController.updateLives('-');
-                                      Get.to(() => Play());
-                                    } else {
-                                      Get.dialog(OhSnap());
-                                    }
-                                  },
-                                  buttonText: 'Play'),
-                              // Container(
-                              //   color: Colors.amber,
-                              //   height: 0,
-                              // ),
+                              Visibility(
+                                  visible: !gameController.canReplay(),
+                                  child: Container(
+                                      alignment: Alignment.center,
+                                      height: Get.height * 0.75,
+                                      child: GameWinner())),
                             ],
+                          )
+                        : SizedBox(
+                            height: Get.height * 0.8,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
                           ),
-                        ),
-                        Visibility(
-                            visible: !gameController.canReplay(),
-                            child: Container(
-                                alignment: Alignment.center,
-                                height: Get.height * 0.75,
-                                child: GameWinner())),
-                      ],
-                    )
-                  : SizedBox(
-                      height: Get.height * 0.8,
-                      child: Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
