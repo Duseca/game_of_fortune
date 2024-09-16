@@ -30,6 +30,7 @@ dependencies:
   url_launcher: ^6.3.0
   flutter_html: ^3.0.0-beta.2
   unity_ads_plugin: ^0.3.20
+  easy_ads_flutter: ^2.5.0
 
 dev_dependencies:
   flutter_test:

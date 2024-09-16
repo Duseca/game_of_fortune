@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_ads_flutter/easy_ads_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -31,6 +32,7 @@ class _HomeState extends State<Home> {
     gameController.getGame();
     gameController
         .loadAd(Platform.isAndroid ? 'Rewarded_Android' : 'Rewarded_iOS');
+    EasyAds.instance.loadAd();
   }
 
   @override
@@ -48,9 +50,17 @@ class _HomeState extends State<Home> {
                   alignment: Alignment.center,
                   width: Get.width,
                   height: 60,
-                  child: UnityBannerAd(
+                  child:
+                      // EasySmartBannerAd(
+                      //   priorityAdNetworks: [
+                      //     AdNetwork.unity,
+                      //     // AdNetwork.admob,
+                      //   ],
+                      //   adSize: AdSize.banner,
+                      // )
+                      UnityBannerAd(
                     size: BannerSize.standard,
-                    placementId: 'Banner_Android',
+                    placementId: Platform.isAndroid ? 'Test_Ad' : 'Banner_iOS',
                     onLoad: (placementId) =>
                         print('Banner loaded: $placementId'),
                     onClick: (placementId) =>
@@ -152,9 +162,14 @@ class _HomeState extends State<Home> {
                                       children: [
                                         InkWell(
                                           onTap: () async {
+                                            await gameController.loadAd(
+                                                Platform.isAndroid
+                                                    ? 'Test_Ad'
+                                                    : 'Banner_iOS');
+
                                             // if(gameController.rewardedAd==null){
-                                            await gameController
-                                                .showRewardedAd();
+                                            // await gameController
+                                            //     .showRewardedAd();
                                             // }
                                             // await gameController.showRewardedAd();
                                           },
