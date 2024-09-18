@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:easy_ads_flutter/easy_ads_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/config/routes/routes.dart';
@@ -9,10 +7,7 @@ import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
-import 'core/utils/easy_ads_sdk.dart';
 // import 'package:google_mobile_ads/google_mobile_ads.dart';
-
-const IAdIdManager adIdManager = MyAdIdManager();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,13 +15,6 @@ void main() async {
     gameId: Platform.isAndroid ? '5698309' : '5698308',
     onComplete: () => print("init complete"),
     onFailed: (error, errorMessage) => print("init failed"),
-  );
-  await EasyAds.instance.initialize(
-    isShowAppOpenOnAppStateChange: false,
-    adIdManager,
-    // adMobAdRequest: const AdRequest(),
-    // admobConfiguration: RequestConfiguration(),
-    showAdBadge: Platform.isIOS,
   );
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
