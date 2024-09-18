@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/config/routes/routes.dart';
@@ -14,7 +13,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await UnityAds.init(
     gameId: Platform.isAndroid ? '5698309' : '5698308',
-    testMode: true,
     onComplete: () => print("init complete"),
     onFailed: (error, errorMessage) => print("init failed"),
   );

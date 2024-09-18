@@ -14,7 +14,6 @@ import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 
 class Home extends StatefulWidget {
   Home({super.key});
@@ -40,38 +39,47 @@ class _HomeState extends State<Home> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Stack(
-              alignment: AlignmentDirectional.topEnd,
-              children: [
-                Container(
-                  color: Colors.black,
-                  alignment: Alignment.center,
-                  width: Get.width,
-                  height: 60,
-                  child: UnityBannerAd(
-                    size: BannerSize.standard,
-                    placementId: 'Banner_Android',
-                    onLoad: (placementId) =>
-                        print('Banner loaded: $placementId'),
-                    onClick: (placementId) =>
-                        print('Banner clicked: $placementId'),
-                    onShown: (placementId) =>
-                        print('Banner shown: $placementId'),
-                    onFailed: (placementId, error, message) =>
-                        print('Banner Ad $placementId failed: $error $message'),
-                  ),
-                ),
-                Container(
-                  color: kPlaceHolderColor,
-                  padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-                  child: MyText(
-                    text: 'Ad',
-                    color: kPrimaryColor,
-                    size: 9,
-                  ),
-                ),
-              ],
-            ),
+            // Stack(
+            //   alignment: AlignmentDirectional.topEnd,
+            //   children: [
+            //     Container(
+            //       color: Colors.black,
+            //       alignment: Alignment.center,
+            //       width: Get.width,
+            //       height: 60,
+            //       child:
+            //           // EasySmartBannerAd(
+            //           //   priorityAdNetworks: [
+            //           //     AdNetwork.unity,
+            //           //     // AdNetwork.admob,
+            //           //   ],
+            //           //   adSize: AdSize.banner,
+            //           // )
+            //           UnityBannerAd(
+            //         size: BannerSize.standard,
+            //         placementId:
+            //             Platform.isAndroid ? 'Banner_Android' : 'Banner_iOS',
+            //         onLoad: (placementId) =>
+            //             print('Banner loaded: $placementId'),
+            //         onClick: (placementId) =>
+            //             print('Banner clicked: $placementId'),
+            //         onShown: (placementId) =>
+            //             print('Banner shown: $placementId'),
+            //         onFailed: (placementId, error, message) =>
+            //             print('Banner Ad $placementId failed: $error $message'),
+            //       ),
+            //     ),
+            //     Container(
+            //       color: kPlaceHolderColor,
+            //       padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
+            //       child: MyText(
+            //         text: 'Ad',
+            //         color: kPrimaryColor,
+            //         size: 9,
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Flexible(
               child: ListView(
                 shrinkWrap: true,
@@ -152,11 +160,8 @@ class _HomeState extends State<Home> {
                                       children: [
                                         InkWell(
                                           onTap: () async {
-                                            // if(gameController.rewardedAd==null){
                                             await gameController
                                                 .showRewardedAd();
-                                            // }
-                                            // await gameController.showRewardedAd();
                                           },
                                           child: Container(
                                             width: 150,
