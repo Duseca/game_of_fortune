@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:game_of_fortune/core/constants/app_images/assets.dart';
+import 'package:game_of_fortune/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/view/screens/auth/login.dart';
@@ -27,7 +27,7 @@ class GetStarted extends StatelessWidget {
                 children: [
                   Center(
                     child: CommonImageView(
-                      imagePath: Assets.imagesLogo,
+                      imagePath: 'assets/images/GOF_Logo_Black.png',
                       height: 235,
                       width: 233,
                       fit: BoxFit.contain,

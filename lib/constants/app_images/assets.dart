@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_single_quotes
 class Assets {
   Assets._();
   
@@ -37,6 +38,10 @@ class Assets {
   /// assets/fonts/Outfit-Thin.ttf
   static const String fontsOutfitThin = "assets/fonts/Outfit-Thin.ttf";
 
+  /// Assets for imagesAppIcon
+  /// assets/images/app_icon.png
+  static const String imagesAppIcon = "assets/images/app_icon.png";
+
   /// Assets for imagesBack
   /// assets/images/Back.png
   static const String imagesBack = "assets/images/Back.png";
@@ -65,6 +70,10 @@ class Assets {
   /// assets/images/GE.png
   static const String imagesGE = "assets/images/GE.png";
 
+  /// Assets for imagesGOFLogoBlack
+  /// assets/images/GOF_Logo_Black.png
+  static const String imagesGOFLogoBlack = "assets/images/GOF_Logo_Black.png";
+
   /// Assets for imagesGlow
   /// assets/images/glow.json
   static const String imagesGlow = "assets/images/glow.json";
@@ -89,6 +98,10 @@ class Assets {
   /// assets/images/money.png
   static const String imagesMoney = "assets/images/money.png";
 
+  /// Assets for imagesNewMain
+  /// assets/images/new_main.png
+  static const String imagesNewMain = "assets/images/new_main.png";
+
   /// Assets for imagesNext
   /// assets/images/next.png
   static const String imagesNext = "assets/images/next.png";
@@ -112,6 +125,10 @@ class Assets {
   /// Assets for imagesRibbon
   /// assets/images/ribbon.png
   static const String imagesRibbon = "assets/images/ribbon.png";
+
+  /// Assets for imagesSplashNew
+  /// assets/images/splash_new.png
+  static const String imagesSplashNew = "assets/images/splash_new.png";
 
   /// Assets for imagesTick
   /// assets/images/tick.png
