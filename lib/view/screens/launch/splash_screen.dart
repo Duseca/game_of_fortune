@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/core/common/functions.dart';
-import 'package:game_of_fortune/core/constants/app_images/assets.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/core/utils/snackbars.dart';
@@ -57,9 +57,9 @@ class _SplashScreenState extends State<SplashScreen> {
       height: Get.height,
       child: Center(
           child: CommonImageView(
-        imagePath: Assets.imagesNewSplash,
+        imagePath: Assets.imagesGOFLogoBlack,
         height: 280,
-        width: Get.width*0.8 ,
+        width: Get.width * 0.8,
         fit: BoxFit.contain,
       )),
     ));
