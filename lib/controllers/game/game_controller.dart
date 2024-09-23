@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/core/utils/dialogs.dart';
+import 'package:game_of_fortune/core/utils/snackbars.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
@@ -143,13 +146,21 @@ class GameController extends GetxController {
             game.value.canReplayAfter!.isBefore(DateTime.now()));
   }
 
-  loadAd(String placementId) async {
+  loadAd(String placementId, BuildContext context) async {
+    DialogService.instance.showProgressDialog(context: context);
     await UnityAds.load(
         placementId: placementId,
-        onComplete: (placementId) {
-          print('Load Complete $placementId');
+        onComplete: (placementId) async {
+          DialogService.instance.hideLoading();
+          print('Load Failed $placementId: ');
+
+          await showRewardedAd();
         },
         onFailed: (placementId, error, message) {
+          DialogService.instance.hideLoading();
+
+          CustomSnackBars.instance.showFailureSnackbar(
+              title: "Alert!", message: "Could not load ad. Please try again");
           print('Load Failed $placementId: $error $message');
         });
   }
@@ -187,9 +198,9 @@ class GameController extends GetxController {
       //   });
       //   rewardedAd = null;
       // } else {
-      //   // CustomSnackBars.instance.showFailureSnackbar(
-      //   //     title: "Alert!",
-      //   //     message: "Currently no ads available, but coming soon!");
+      // CustomSnackBars.instance.showFailureSnackbar(
+      //     title: "Alert!",
+      //     message: "Currently no ads available, but coming soon!");
       //   // Get.defaultDialog(
       //   //   title: 'Ads not ready yet!',
       //   //   barrierDismissible: false,

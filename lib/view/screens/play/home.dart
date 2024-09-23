@@ -28,8 +28,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     gameController.getGame();
-    gameController
-        .loadAd(Platform.isAndroid ? 'Rewarded_Android' : 'Rewarded_iOS');
+    // gameController
+    //     .loadAd(Platform.isAndroid ? 'Rewarded_Android' : 'Rewarded_iOS');
   }
 
   @override
@@ -39,47 +39,6 @@ class _HomeState extends State<Home> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Stack(
-            //   alignment: AlignmentDirectional.topEnd,
-            //   children: [
-            //     Container(
-            //       color: Colors.black,
-            //       alignment: Alignment.center,
-            //       width: Get.width,
-            //       height: 60,
-            //       child:
-            //           // EasySmartBannerAd(
-            //           //   priorityAdNetworks: [
-            //           //     AdNetwork.unity,
-            //           //     // AdNetwork.admob,
-            //           //   ],
-            //           //   adSize: AdSize.banner,
-            //           // )
-            //           UnityBannerAd(
-            //         size: BannerSize.standard,
-            //         placementId:
-            //             Platform.isAndroid ? 'Banner_Android' : 'Banner_iOS',
-            //         onLoad: (placementId) =>
-            //             print('Banner loaded: $placementId'),
-            //         onClick: (placementId) =>
-            //             print('Banner clicked: $placementId'),
-            //         onShown: (placementId) =>
-            //             print('Banner shown: $placementId'),
-            //         onFailed: (placementId, error, message) =>
-            //             print('Banner Ad $placementId failed: $error $message'),
-            //       ),
-            //     ),
-            //     Container(
-            //       color: kPlaceHolderColor,
-            //       padding: EdgeInsets.symmetric(horizontal: 6.0, vertical: 2.0),
-            //       child: MyText(
-            //         text: 'Ad',
-            //         color: kPrimaryColor,
-            //         size: 9,
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Flexible(
               child: ListView(
                 shrinkWrap: true,
@@ -160,8 +119,11 @@ class _HomeState extends State<Home> {
                                       children: [
                                         InkWell(
                                           onTap: () async {
-                                            await gameController
-                                                .showRewardedAd();
+                                            await gameController.loadAd(
+                                                Platform.isAndroid
+                                                    ? 'Rewarded_Android'
+                                                    : 'Rewarded_iOS',
+                                                context);
                                           },
                                           child: Container(
                                             width: 150,
@@ -313,9 +275,13 @@ class OhSnap extends StatelessWidget {
                         color: kRedColor,
                       ),
                       InkWell(
-                        onTap: () {
+                        onTap: () async {
                           Get.back();
-                          gameController.showRewardedAd();
+                          gameController.loadAd(
+                              Platform.isAndroid
+                                  ? 'Rewarded_Android'
+                                  : 'Rewarded_iOS',
+                              context);
                         },
                         child: Container(
                           width: 150,
