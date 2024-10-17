@@ -7,12 +7,14 @@ import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
 import 'package:game_of_fortune/view/screens/play/game_winner.dart';
 import 'package:game_of_fortune/view/screens/play/play.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
@@ -24,16 +26,41 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final gameController = Get.find<GameController>();
+  late BannerAd bannerAd;
+
+  bool isAdLoaded = false;
+
+  initBannerAd() {
+    bannerAd = BannerAd(
+        size: AdSize.banner,
+        adUnitId: AdService.bannerAdUnitId!,
+        listener: BannerAdListener(
+          onAdLoaded: (ad) {
+            setState(() {
+              isAdLoaded = true;
+            });
+          },
+          onAdFailedToLoad: (ad, error) {
+            ad.dispose();
+            print("error $error");
+          },
+        ),
+        request: AdRequest());
+    bannerAd.load();
+  }
+
   @override
   void initState() {
     super.initState();
     gameController.getGame();
+    initBannerAd();
     // gameController
     //     .loadAd(Platform.isAndroid ? 'Rewarded_Android' : 'Rewarded_iOS');
   }
 
   @override
   Widget build(BuildContext context) {
+    initBannerAd();
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -44,6 +71,14 @@ class _HomeState extends State<Home> {
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 children: [
+                  Visibility(
+                    visible: isAdLoaded,
+                    child: Container(
+                      height: bannerAd.size.height.toDouble(),
+                      width: bannerAd.size.width.toDouble(),
+                      child: AdWidget(ad: bannerAd),
+                    ),
+                  ),
                   SizedBox(
                     height: 20,
                   ),

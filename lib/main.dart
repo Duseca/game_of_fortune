@@ -7,10 +7,14 @@ import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
-// import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await MobileAds.instance.initialize();
+  // await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
+  //     testDeviceIds: ['3559F6861A199DE645DA48CA436D88EE']));
+
   await UnityAds.init(
     gameId: Platform.isAndroid ? '5698309' : '5698308',
     onComplete: () => print("init complete"),
