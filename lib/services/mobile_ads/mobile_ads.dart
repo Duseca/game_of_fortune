@@ -16,16 +16,17 @@ class AdService {
     if (Platform.isAndroid) {
       return "ca-app-pub-5103565823373972/6194131078";
     } else if (Platform.isIOS) {
-      return "ca-app-pub-9071761241773942/1639034317";
+      return "ca-app-pub-9071761241773942/4687169441";
     }
     return null;
   }
 
   static String? get rewardedAdUnitId {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-5103565823373972/6393241932';
+      return 'ca-app-pub-9071761241773942/3445852924';
     } else if (Platform.isIOS) {
-      return "ca-app-pub-9071761241773942/1639034317";
+      return "ca-app-pub-9071761241773942~6612219463";
     }
+    return null;
   }
 }

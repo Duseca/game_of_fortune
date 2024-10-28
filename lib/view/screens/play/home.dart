@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
   initBannerAd() {
     bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: AdService.bannerAdUnitId!,
+        adUnitId: 'ca-app-pub-3940256099942544/6300978111',
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
@@ -54,8 +54,6 @@ class _HomeState extends State<Home> {
     super.initState();
     gameController.getGame();
     initBannerAd();
-    // gameController
-    //     .loadAd(Platform.isAndroid ? 'Rewarded_Android' : 'Rewarded_iOS');
   }
 
   @override
@@ -154,11 +152,13 @@ class _HomeState extends State<Home> {
                                       children: [
                                         InkWell(
                                           onTap: () async {
-                                            await gameController.loadAd(
-                                                Platform.isAndroid
-                                                    ? 'Rewarded_Android'
-                                                    : 'Rewarded_iOS',
-                                                context);
+                                            gameController.createRewardedAd();
+                                            Future.delayed(
+                                                (Duration(seconds: 2)),
+                                                () async {
+                                              await gameController
+                                                  .showRewardedAd();
+                                            });
                                           },
                                           child: Container(
                                             width: 150,
@@ -312,11 +312,10 @@ class OhSnap extends StatelessWidget {
                       InkWell(
                         onTap: () async {
                           Get.back();
-                          gameController.loadAd(
-                              Platform.isAndroid
-                                  ? 'Rewarded_Android'
-                                  : 'Rewarded_iOS',
-                              context);
+                          gameController.createRewardedAd();
+                          Future.delayed((Duration(seconds: 2)), () async {
+                            await gameController.showRewardedAd();
+                          });
                         },
                         child: Container(
                           width: 150,
