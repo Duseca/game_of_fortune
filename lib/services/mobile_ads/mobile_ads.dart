@@ -14,9 +14,9 @@ class AdService {
 
   static String? get bannerAdUnitId {
     if (Platform.isAndroid) {
-      return "ca-app-pub-5103565823373972/6194131078";
+      return "ca-app-pub-9071761241773942/2287332194";
     } else if (Platform.isIOS) {
-      return "ca-app-pub-9071761241773942/4687169441";
+      return "ca-app-pub-9071761241773942/1639034317";
     }
     return null;
   }

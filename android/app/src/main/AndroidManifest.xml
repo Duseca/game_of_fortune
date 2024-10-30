@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application
-        android:label="game_of_fortune"
+        android:label="Games of Fortune"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

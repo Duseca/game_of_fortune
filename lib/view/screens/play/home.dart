@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -33,7 +31,7 @@ class _HomeState extends State<Home> {
   initBannerAd() {
     bannerAd = BannerAd(
         size: AdSize.banner,
-        adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+        adUnitId: AdService.bannerAdUnitId!,
         listener: BannerAdListener(
           onAdLoaded: (ad) {
             setState(() {
@@ -58,25 +56,25 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    initBannerAd();
     return SafeArea(
       child: Scaffold(
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Visibility(
+              visible: isAdLoaded,
+              child: Container(
+                color: kBlackColor,
+                height: bannerAd.size.height.toDouble(),
+                width: Get.width,
+                child: AdWidget(ad: bannerAd),
+              ),
+            ),
             Flexible(
               child: ListView(
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 children: [
-                  Visibility(
-                    visible: isAdLoaded,
-                    child: Container(
-                      height: bannerAd.size.height.toDouble(),
-                      width: bannerAd.size.width.toDouble(),
-                      child: AdWidget(ad: bannerAd),
-                    ),
-                  ),
                   SizedBox(
                     height: 20,
                   ),
@@ -152,13 +150,8 @@ class _HomeState extends State<Home> {
                                       children: [
                                         InkWell(
                                           onTap: () async {
-                                            gameController.createRewardedAd();
-                                            Future.delayed(
-                                                (Duration(seconds: 2)),
-                                                () async {
-                                              await gameController
-                                                  .showRewardedAd();
-                                            });
+                                            gameController
+                                                .createRewardedAd(context);
                                           },
                                           child: Container(
                                             width: 150,
@@ -312,10 +305,7 @@ class OhSnap extends StatelessWidget {
                       InkWell(
                         onTap: () async {
                           Get.back();
-                          gameController.createRewardedAd();
-                          Future.delayed((Duration(seconds: 2)), () async {
-                            await gameController.showRewardedAd();
-                          });
+                          gameController.createRewardedAd(context);
                         },
                         child: Container(
                           width: 150,

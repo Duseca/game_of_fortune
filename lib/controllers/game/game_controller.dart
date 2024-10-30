@@ -1,19 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/core/utils/dialogs.dart';
-import 'package:game_of_fortune/core/utils/snackbars.dart';
 import 'package:game_of_fortune/models/choices_model.dart';
 import 'package:game_of_fortune/models/game_model.dart';
 import 'package:game_of_fortune/models/player_model.dart';
 import 'package:game_of_fortune/services/firebase/firebase_crud.dart';
 import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
 import 'package:get/get.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GameController extends GetxController {
@@ -147,93 +144,43 @@ class GameController extends GetxController {
             game.value.canReplayAfter!.isBefore(DateTime.now()));
   }
 
-  // loadAd(String placementId, BuildContext context) async {
-  //   DialogService.instance.showProgressDialog(context: context);
-  //   await UnityAds.load(
-  //       placementId: placementId,
-  //       onComplete: (placementId) async {
-  //         DialogService.instance.hideLoading();
-  //         print('Load Failed $placementId: ');
-
-  //         await showRewardedAd();
-  //       },
-  //       onFailed: (placementId, error, message) {
-  //         DialogService.instance.hideLoading();
-
-  //         CustomSnackBars.instance.showFailureSnackbar(
-  //             title: "Alert!", message: "Could not load ad. Please try again");
-  //         print('Load Failed $placementId: $error $message');
-  //       });
-  // }
-
-  void createRewardedAd() {
-    RewardedAd.load(
-        adUnitId: AdService.rewardedAdUnitId!,
-        request: const AdRequest(),
-        rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
-          rewardedAd = ad;
-        }, onAdFailedToLoad: (ad) {
-          log("message:: ${ad.message}, ${ad.code}");
-          rewardedAd = null;
-        }));
+  void createRewardedAd(BuildContext context) {
+    try {
+      DialogService.instance.showProgressDialog(context: context);
+      RewardedAd.load(
+          adUnitId: AdService.rewardedAdUnitId!,
+          request: const AdRequest(),
+          rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
+            rewardedAd = ad;
+            DialogService.instance.hideLoading();
+            showRewardedAd(context);
+          }, onAdFailedToLoad: (ad) {
+            DialogService.instance.hideLoading();
+            log("message:: ${ad.message}, ${ad.code}");
+            rewardedAd = null;
+          }));
+    } catch (e) {
+      DialogService.instance.hideLoading();
+    }
   }
 
-  showRewardedAd() async {
+  showRewardedAd(BuildContext context) async {
     try {
-      // if (Platform.isAndroid) {
-      //   await UnityAds.showVideoAd(
-      //       placementId: 'Rewarded_Android',
-      //       onComplete: (String res) async {
-      //         print("object: res: $res");
-      //         await updateLives('+');
-      //       });
-      // } else if (Platform.isIOS) {
-      //   await UnityAds.showVideoAd(
-      //       placementId: 'Rewarded_iOS',
-      //       onComplete: (String res) async {
-      //         print("object: res: $res");
-      //         await updateLives('+');
-      //       });
-      // }
       if (rewardedAd != null) {
         rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
           onAdDismissedFullScreenContent: (ad) {
             ad.dispose();
-            createRewardedAd();
+            createRewardedAd(context);
           },
           onAdFailedToShowFullScreenContent: (ad, error) {
             ad.dispose();
-            createRewardedAd();
+            createRewardedAd(context);
           },
         );
         await rewardedAd!.show(onUserEarnedReward: (ad, reward) async {
           await updateLives('+');
         });
         rewardedAd = null;
-        // } else {
-        // CustomSnackBars.instance.showFailureSnackbar(
-        //     title: "Alert!",
-        //     message: "Currently no ads available, but coming soon!");
-        // Get.defaultDialog(
-        //   title: 'Ads not ready yet!',
-        //   barrierDismissible: false,
-        //   content: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: MyText(
-        //       text: 'Ads not ready yet, you are still awarded a life. Have fun !!',
-        //     ),
-        //   ),
-        //   confirm: Padding(
-        //     padding: const EdgeInsets.all(8.0),
-        //     child: MyBorderButton(buttonText: 'Okay', onTap: () async {
-        //       await updateLives('+');
-        //       Get.back();
-        //     }),
-        //   )
-        // );
-
-        //   Get.to(() => VideoApp());
-        //   await updateLives('+');
       }
     } catch (e) {
       log("Exception:::showRewardedAd():$e");
