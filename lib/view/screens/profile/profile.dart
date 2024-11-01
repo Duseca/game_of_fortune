@@ -23,108 +23,100 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: simpleAppBar(haveBackButton: false, title: 'Profile'),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: ListView(
+        shrinkWrap: true,
+        padding: AppSizes.DEFAULT,
+        physics: const BouncingScrollPhysics(),
         children: [
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              padding: AppSizes.DEFAULT,
-              physics: const BouncingScrollPhysics(),
-              children: [
-                Stack(
-                  children: [
-                    Center(
-                      child: Obx(
-                        () => userModelGlobal.value.img != ''
-                            ? CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.transparent,
-                                child: CommonImageView(
-                                  url: userModelGlobal.value.img,
-                                  fit: BoxFit.cover,
-                                  width: Get.width,
-                                  radius: 70,
-                                ),
-                              )
-                            : CommonImageView(
-                                imagePath: Assets.imagesProfile,
-                                fit: BoxFit.contain,
-                                height: 113,
-                              ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 11.0),
-                      child: Center(
-                        child: CommonImageView(
-                          radius: 200,
-                          height: 90,
-                          width: 90,
-                          fit: BoxFit.cover,
+          Stack(
+            children: [
+              Center(
+                child: Obx(
+                  () => userModelGlobal.value.img != ''
+                      ? CircleAvatar(
+                          radius: 60,
+                          backgroundColor: Colors.transparent,
+                          child: CommonImageView(
+                            url: userModelGlobal.value.img,
+                            fit: BoxFit.cover,
+                            width: Get.width,
+                            radius: 70,
+                          ),
+                        )
+                      : CommonImageView(
+                          imagePath: Assets.imagesProfile,
+                          fit: BoxFit.contain,
+                          height: 113,
                         ),
-                      ),
-                    )
-                  ],
                 ),
-                SizedBox(
-                  height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 11.0),
+                child: Center(
+                  child: CommonImageView(
+                    radius: 200,
+                    height: 90,
+                    width: 90,
+                    fit: BoxFit.cover,
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              )
+            ],
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                      color: kSecondaryColor,
+                      blurRadius: 80,
+                      offset: Offset(0, 25),
+                      spreadRadius: 10)
+                ]),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(boxShadow: [
-                        BoxShadow(
-                            color: kSecondaryColor,
-                            blurRadius: 80,
-                            offset: Offset(0, 25),
-                            spreadRadius: 10)
-                      ]),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Obx(
-                            () => MyText(
-                              textAlign: TextAlign.center,
-                              paddingTop: 20,
-                              text:
-                                  '${userModelGlobal.value.fName} ${userModelGlobal.value.lName}',
-                              size: 26,
-                              weight: FontWeight.w500,
-                            ),
-                          ),
-                          MyText(
-                            textAlign: TextAlign.center,
-                            text: auth.currentUser!.email!,
-                            weight: FontWeight.w400,
-                          ),
-                        ],
+                    Obx(
+                      () => MyText(
+                        textAlign: TextAlign.center,
+                        paddingTop: 20,
+                        text:
+                            '${userModelGlobal.value.fName} ${userModelGlobal.value.lName}',
+                        size: 26,
+                        weight: FontWeight.w500,
                       ),
+                    ),
+                    MyText(
+                      textAlign: TextAlign.center,
+                      text: auth.currentUser!.email!,
+                      weight: FontWeight.w400,
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: 50,
-                ),
-                profiletile(() {
-                  Get.to(() => MyAccount());
-                }, 'My Account'),
-                profiletile(() async {
-
-                  await gameController.getTermsCond();
-                  Get.to(() => TermsConditions());
-                }, 'Terms and Conditions'),
-                profiletile(() {
-                  Get.dialog(Logout());
-                }, 'Log Out'),
-                profiletile(() async {
-                  await Get.dialog(DeleteAccount());
-//                  await authController.deleteUserccount();
-                }, 'Delete Account'),
-              ],
-            ),
+              ),
+            ],
           ),
+          SizedBox(
+            height: 50,
+          ),
+          profiletile(() {
+            Get.to(() => MyAccount());
+          }, 'My Account'),
+          profiletile(() async {
+            await gameController.getTermsCond();
+            Get.to(() => TermsConditions());
+          }, 'Terms and Conditions'),
+          profiletile(() {
+            Get.dialog(Logout());
+          }, 'Log Out'),
+          profiletile(() async {
+            await Get.dialog(DeleteAccount());
+          }, 'Delete Account'),
+          SizedBox(height: 200),
         ],
       ),
     );

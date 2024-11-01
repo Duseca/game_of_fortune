@@ -51,6 +51,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     gameController.getGame();
+    gameController.createRewardedAd(context);
+
     initBannerAd();
   }
 
@@ -150,8 +152,10 @@ class _HomeState extends State<Home> {
                                       children: [
                                         InkWell(
                                           onTap: () async {
-                                            gameController
+                                            await gameController
                                                 .createRewardedAd(context);
+                                            gameController
+                                                .showRewardedAd(context);
                                           },
                                           child: Container(
                                             width: 150,
@@ -216,10 +220,6 @@ class _HomeState extends State<Home> {
                                           }
                                         },
                                         buttonText: 'Play'),
-                                    // Container(
-                                    //   color: Colors.amber,
-                                    //   height: 0,
-                                    // ),
                                   ],
                                 ),
                               ),
@@ -305,7 +305,8 @@ class OhSnap extends StatelessWidget {
                       InkWell(
                         onTap: () async {
                           Get.back();
-                          gameController.createRewardedAd(context);
+                          await gameController.createRewardedAd(context);
+                          gameController.showRewardedAd(context);
                         },
                         child: Container(
                           width: 150,

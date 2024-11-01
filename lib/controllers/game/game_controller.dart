@@ -144,16 +144,15 @@ class GameController extends GetxController {
             game.value.canReplayAfter!.isBefore(DateTime.now()));
   }
 
-  void createRewardedAd(BuildContext context) {
+  createRewardedAd(BuildContext context) async {
     try {
       DialogService.instance.showProgressDialog(context: context);
-      RewardedAd.load(
+      await RewardedAd.load(
           adUnitId: AdService.rewardedAdUnitId!,
           request: const AdRequest(),
           rewardedAdLoadCallback: RewardedAdLoadCallback(onAdLoaded: (ad) {
             rewardedAd = ad;
             DialogService.instance.hideLoading();
-            showRewardedAd(context);
           }, onAdFailedToLoad: (ad) {
             DialogService.instance.hideLoading();
             log("message:: ${ad.message}, ${ad.code}");
@@ -170,7 +169,6 @@ class GameController extends GetxController {
         rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
           onAdDismissedFullScreenContent: (ad) {
             ad.dispose();
-            createRewardedAd(context);
           },
           onAdFailedToShowFullScreenContent: (ad, error) {
             ad.dispose();
