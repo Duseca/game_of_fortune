@@ -48,7 +48,7 @@ class Register extends StatelessWidget {
                     paddingBottom: 40,
                   ),
                   MyTextField(
-                      label: 'First Name',
+                      label: 'Username',
                       suffix: Padding(
                         padding: const EdgeInsets.all(15.0),
                         child: CommonImageView(
@@ -57,6 +57,21 @@ class Register extends StatelessWidget {
                         ),
                       ),
                       hint: 'Enter username',
+                      controller: authController.username,
+                      validator: (value) {
+                        return ValidationService.instance
+                            .userNameValidator(value);
+                      }),
+                  MyTextField(
+                      label: 'First Name',
+                      suffix: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: CommonImageView(
+                          imagePath: Assets.imagesUser,
+                          height: 10,
+                        ),
+                      ),
+                      hint: 'Enter first name',
                       controller: authController.fName,
                       validator: (value) {
                         return ValidationService.instance.emptyValidator(value);
@@ -70,7 +85,7 @@ class Register extends StatelessWidget {
                           height: 10,
                         ),
                       ),
-                      hint: 'Enter username',
+                      hint: 'Enter last name',
                       controller: authController.lName,
                       validator: (value) {
                         return ValidationService.instance.emptyValidator(value);
@@ -141,7 +156,8 @@ class Register extends StatelessWidget {
                       hint: 'Repeat your Password',
                       controller: authController.confirmPass,
                       validator: (value) {
-                        if(value!.isNotEmpty&&value!=authController.password.text){
+                        if (value!.isNotEmpty &&
+                            value != authController.password.text) {
                           return 'Passwords not same!';
                         }
                         return ValidationService.instance.emptyValidator(value);
@@ -172,7 +188,6 @@ class Register extends StatelessWidget {
                       onTap: () async {
                         if (_signupForm.currentState!.validate()) {
                           if (authController.acceptTerms.isTrue) {
-
                             await authController.createPlayer(context);
                           } else {
                             CustomSnackBars.instance.showFailureSnackbar(

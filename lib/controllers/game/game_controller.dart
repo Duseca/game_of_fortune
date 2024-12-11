@@ -15,7 +15,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GameController extends GetxController {
   late StreamSubscription<QuerySnapshot> playersStream;
-  RxList<PlayerModel> players = RxList<PlayerModel>([]);
+  RxList<PlayerModel> players = RxList<PlayerModel>([]),
+      weeklyPlayers = RxList<PlayerModel>([]);
   late StreamSubscription<QuerySnapshot> gameStream;
   Rx<GameModel> game = GameModel().obs;
   Rx<PlayerModel> winner = PlayerModel().obs;
@@ -35,28 +36,42 @@ class GameController extends GetxController {
 
   getAllPlayers() async {
     try {
-      playersStream = await playersCollection.snapshots().listen((snapshot) {
+      playersStream = await playersCollection
+          .orderBy('highestScore', descending: true)
+          .limit(100)
+          .snapshots()
+          .listen((snapshot) {
         players.clear();
         for (var doc in snapshot.docs) {
           PlayerModel player = PlayerModel.fromMap(doc.data());
           players.add(player);
         }
-
-        players.sort((a, b) {
-          if (a.highestScore != null && b.highestScore != null) {
-            return b.highestScore!.compareTo(a.highestScore!);
-          } else if (a.highestScore == null && b.highestScore == null) {
-            return 0;
-          } else if (a.highestScore == null) {
-            return 1; // Place null scores at the end
-          } else {
-            return -1; // Place null scores at the end
-          }
-        });
+        update(['overall']);
+        getPlayersofCurrentWeek();
       });
     } catch (e) {
       print("Exception::getAllPlayers(): $e");
     }
+  }
+
+  getPlayersofCurrentWeek() async {
+    // Calculate the start and end of the current week
+    DateTime startOfWeek =
+        DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+    DateTime formattedStart =
+        DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
+    DateTime formattedEnd =
+        DateTime(endOfWeek.year, endOfWeek.month, endOfWeek.day);
+
+    // Filter players whose scoredDate is within the current week
+    weeklyPlayers.value = players.where((p) {
+      return p.scoredDate != null &&
+          p.scoredDate!
+              .isAfter(formattedStart.subtract(Duration(seconds: 1))) &&
+          p.scoredDate!.isBefore(formattedEnd.add(Duration(seconds: 1)));
+    }).toList();
+    update(['weekly']);
   }
 
   getGame() async {
@@ -76,12 +91,9 @@ class GameController extends GetxController {
 
   updateLives(String operator) async {
     try {
-      log("message:: $operator");
-
       var updatedLives = operator == '+'
           ? userModelGlobal.value.lives! + 1
           : userModelGlobal.value.lives! - 1;
-      log("message:: ${updatedLives}");
       await playersCollection
           .doc(auth.currentUser!.uid)
           .update({'lives': updatedLives});

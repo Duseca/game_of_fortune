@@ -56,6 +56,7 @@ class Login extends StatelessWidget {
                     }),
                 MyTextField(
                     label: 'Password',
+                    isObSecure: true,
                     suffix: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: CommonImageView(

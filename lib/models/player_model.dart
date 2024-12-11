@@ -1,5 +1,5 @@
 class PlayerModel {
-  String? playerId, fName, lName, email, phoneNum, iso, img;
+  String? playerId, fName, lName, email, phoneNum, iso, img, username;
   int? lives, highestScore;
   DateTime? scoredDate, livesUpdatedOn;
 
@@ -15,12 +15,14 @@ class PlayerModel {
     this.lives,
     this.highestScore,
     this.scoredDate,
+    this.username,
   });
 
   PlayerModel.fromMap(Map<String, dynamic> map) {
     email = map.containsKey('email') ? map['email'] ?? '' : '';
     fName = map.containsKey('fName') ? map['fName'] ?? '' : '';
     lName = map.containsKey('lName') ? map['lName'] ?? '' : '';
+    username = map.containsKey('username') ? map['username'] ?? '' : '';
     iso = map.containsKey('iso') ? map['iso'] ?? '' : '';
     img = map.containsKey('img') ? map['img'] ?? '' : '';
     lives = map.containsKey('lives') ? map['lives'] ?? 0 : 0;
@@ -42,6 +44,7 @@ class PlayerModel {
       if (email != null) 'email': email,
       if (fName != null) 'fName': fName,
       if (lName != null) 'lName': lName,
+      if (username != null) 'username': username,
       if (phoneNum != null) 'phoneNum': phoneNum,
       if (iso != null) 'iso': iso,
       if (img != null) 'img': img,

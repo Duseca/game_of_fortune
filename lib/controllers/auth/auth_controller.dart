@@ -26,7 +26,8 @@ class AuthController extends GetxController {
       confirmPass = TextEditingController(),
       phoneNum = TextEditingController(),
       fName = TextEditingController(),
-      lName = TextEditingController();
+      lName = TextEditingController(),
+      username = TextEditingController();
 
   var isoCode = '+1'.obs, acceptTerms = false.obs, profilePicture = ''.obs;
 
@@ -39,33 +40,42 @@ class AuthController extends GetxController {
   createPlayer(BuildContext context) async {
     DialogService.instance.showProgressDialog(context: context);
     try {
-      User? user = await FirebaseAuthService.instance
-          .signUpUsingEmailAndPassword(
-              email: email.text.trim(), password: password.text.trim());
-      if (user != null) {
-        try {
-          PlayerModel newPlayer = PlayerModel(
-            playerId: user.uid,
-            fName: fName.text.trim(),
-            lName: lName.text.trim(),
-            email: user.email,
-            phoneNum: phoneNum.text.trim(),
-            iso: isoCode.value,
-            lives: 0,
-          );
+      bool usernameUnique = await isUsernameUnique(username.text.trim());
+      if (usernameUnique) {
+        User? user = await FirebaseAuthService.instance
+            .signUpUsingEmailAndPassword(
+                email: email.text.trim(), password: password.text.trim());
+        if (user != null) {
+          try {
+            PlayerModel newPlayer = PlayerModel(
+              playerId: user.uid,
+              fName: fName.text.trim(),
+              lName: lName.text.trim(),
+              username: username.text.trim(),
+              email: user.email,
+              phoneNum: phoneNum.text.trim(),
+              iso: isoCode.value,
+              lives: 0,
+            );
 
-          bool isCreated = await FirebaseCRUDService.instance.createDocument(
-              collectionReference: playersCollection,
-              docId: newPlayer.playerId!,
-              data: newPlayer.toMap());
-          DialogService.instance.hideLoading();
-          if (isCreated) {
-            Get.to(() => EmailVerification());
+            bool isCreated = await FirebaseCRUDService.instance.createDocument(
+                collectionReference: playersCollection,
+                docId: newPlayer.playerId!,
+                data: newPlayer.toMap());
+            DialogService.instance.hideLoading();
+            if (isCreated) {
+              Get.to(() => EmailVerification());
+            }
+          } catch (e) {
+            DialogService.instance.hideLoading();
+            print('Exception::createPlayer(): $e');
           }
-        } catch (e) {
-          DialogService.instance.hideLoading();
-          print('Exception::createPlayer(): $e');
         }
+      } else {
+        Get.back();
+
+        CustomSnackBars.instance.showFailureSnackbar(
+            title: 'Alert!', message: 'Please select a unique username');
       }
     } catch (e) {
       Get.back();
@@ -220,8 +230,24 @@ class AuthController extends GetxController {
             );
           });
     } catch (e) {
-      // Handle exceptions
       log("eee: $e");
+    }
+  }
+
+  Future<bool> isUsernameUnique(String username) async {
+    try {
+      // Query Firestore to check if the username exists
+      final querySnapshot = await playersCollection
+          .where('username', isEqualTo: username)
+          .limit(1) // Limit to 1 for efficiency
+          .get();
+
+      // If no documents are returned, the username is unique
+      return querySnapshot.docs.isEmpty;
+    } catch (e) {
+      // Handle errors appropriately
+      print("Error checking username uniqueness: $e");
+      return false;
     }
   }
 
@@ -232,6 +258,7 @@ class AuthController extends GetxController {
     confirmPass.dispose();
     phoneNum.dispose();
     fName.dispose();
+    username.dispose();
     lName.dispose();
     super.onClose();
   }

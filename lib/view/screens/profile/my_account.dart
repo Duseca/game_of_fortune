@@ -89,6 +89,29 @@ class MyAccount extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     MyText(
+                      text: 'Username',
+                      weight: FontWeight.w600,
+                    ),
+                    Obx(
+                      () => MyText(
+                        text: userModelGlobal.value.username ?? '-',
+                      ),
+                    )
+                  ],
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  thickness: 1,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MyText(
                       text: 'First Name',
                       weight: FontWeight.w600,
                     ),

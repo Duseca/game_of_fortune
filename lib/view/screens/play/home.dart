@@ -5,12 +5,14 @@ import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
+import 'package:game_of_fortune/services/local_storage/local_storage_service.dart';
 import 'package:game_of_fortune/services/mobile_ads/mobile_ads.dart';
 import 'package:game_of_fortune/view/screens/play/game_winner.dart';
 import 'package:game_of_fortune/view/screens/play/play.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_button_widget.dart';
 import 'package:game_of_fortune/view/widgets/my_text_widget.dart';
+import 'package:game_of_fortune/view/widgets/tips.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
@@ -207,16 +209,25 @@ class _HomeState extends State<Home> {
                                     MyButton(
                                         mBottom: 120,
                                         onTap: () async {
-                                          if (userModelGlobal.value.lives! >
-                                              0) {
-                                            await gameController
-                                                .updateLives('-');
-                                            Get.to(() => Play());
+                                          var showTips =
+                                              await LocalStorageService.instance
+                                                  .read(key: 'showTips');
+                                          print("object: ${showTips}");
+                                          if (showTips == null ||
+                                              showTips == false) {
+                                            Get.to(Tips());
                                           } else {
-                                            Get.dialog(
-                                              barrierDismissible: false,
-                                              OhSnap(),
-                                            );
+                                            if (userModelGlobal.value.lives! >
+                                                0) {
+                                              await gameController
+                                                  .updateLives('-');
+                                              Get.to(() => Play());
+                                            } else {
+                                              Get.dialog(
+                                                barrierDismissible: false,
+                                                OhSnap(),
+                                              );
+                                            }
                                           }
                                         },
                                         buttonText: 'Play'),

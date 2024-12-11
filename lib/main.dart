@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -6,23 +7,27 @@ import 'package:game_of_fortune/config/themes/light_theme.dart';
 import 'package:game_of_fortune/core/bindings/bindings.dart';
 import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await MobileAds.instance.initialize();
-  // await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-  //     testDeviceIds: ['70A5D0698A73992430C00C3CF9AFACEE']));
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await MobileAds.instance.initialize();
+    await GetStorage.init();
+    await UnityAds.init(
+      gameId: Platform.isAndroid ? '5698309' : '5698308',
+      onComplete: () => print("init complete"),
+      onFailed: (error, errorMessage) => print("init failed"),
+    );
 
-  await UnityAds.init(
-    gameId: Platform.isAndroid ? '5698309' : '5698308',
-    onComplete: () => print("init complete"),
-    onFailed: (error, errorMessage) => print("init failed"),
-  );
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+    await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform);
+    runApp(MyApp());
+  }, (err, stacktrace) {
+    print('Exception caught in run zoned guarded');
+  });
 }
 
 const dummyimg1 =
