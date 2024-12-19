@@ -25,7 +25,7 @@ class AdService {
     if (Platform.isAndroid) {
       return 'ca-app-pub-9071761241773942/3445852924';
     } else if (Platform.isIOS) {
-      return "ca-app-pub-9071761241773942~6612219463";
+      return "ca-app-pub-9071761241773942/6823900041";
     }
     return null;
   }

@@ -64,15 +64,6 @@ class Tips extends StatelessWidget {
                 await LocalStorageService.instance
                     .write(key: 'showTips', value: true);
                 Navigator.pop(context);
-                // if (userModelGlobal.value.lives! > 0) {
-                //   await gameController.updateLives('-');
-                //   Get.off(() => Play());
-                // } else {
-                //   Get.dialog(
-                //     barrierDismissible: false,
-                //     OhSnap(),
-                //   );
-                // }
               },
               buttonText: 'Got it!'),
         ],
