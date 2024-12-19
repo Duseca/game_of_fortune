@@ -212,7 +212,6 @@ class _HomeState extends State<Home> {
                                           var showTips =
                                               await LocalStorageService.instance
                                                   .read(key: 'showTips');
-                                          print("object: ${showTips}");
                                           if (showTips == null ||
                                               showTips == false) {
                                             Get.to(Tips());

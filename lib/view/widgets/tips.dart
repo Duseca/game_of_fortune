@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
-import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/services/local_storage/local_storage_service.dart';
-import 'package:game_of_fortune/view/screens/play/home.dart';
-import 'package:game_of_fortune/view/screens/play/play.dart';
 import 'package:get/get.dart';
 
 import 'my_button_widget.dart';
@@ -66,18 +63,18 @@ class Tips extends StatelessWidget {
               onTap: () async {
                 await LocalStorageService.instance
                     .write(key: 'showTips', value: true);
-
-                if (userModelGlobal.value.lives! > 0) {
-                  await gameController.updateLives('-');
-                  Get.off(() => Play());
-                } else {
-                  Get.dialog(
-                    barrierDismissible: false,
-                    OhSnap(),
-                  );
-                }
+                Navigator.pop(context);
+                // if (userModelGlobal.value.lives! > 0) {
+                //   await gameController.updateLives('-');
+                //   Get.off(() => Play());
+                // } else {
+                //   Get.dialog(
+                //     barrierDismissible: false,
+                //     OhSnap(),
+                //   );
+                // }
               },
-              buttonText: 'Play'),
+              buttonText: 'Got it!'),
         ],
       ),
     );
