@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -11,8 +12,20 @@ import 'package:game_of_fortune/view/widgets/simple_app_bar_widget.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class Players extends StatelessWidget {
+class Players extends StatefulWidget {
   Players({super.key});
+
+  @override
+  State<Players> createState() => _PlayersState();
+}
+
+class _PlayersState extends State<Players> {
+  @override
+  void initState() {
+    super.initState();
+    Get.find<GameController>().getPlayersofCurrentWeek();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

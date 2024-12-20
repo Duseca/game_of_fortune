@@ -14,7 +14,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class GameController extends GetxController {
-  late StreamSubscription<QuerySnapshot> playersStream;
+  late StreamSubscription<QuerySnapshot> playersStream, weeklyPlayerStream;
   RxList<PlayerModel> players = RxList<PlayerModel>([]),
       weeklyPlayers = RxList<PlayerModel>([]);
   late StreamSubscription<QuerySnapshot> gameStream;
@@ -32,6 +32,7 @@ class GameController extends GetxController {
     isloading(false);
     await getAllPlayers();
     await getGame();
+    await getPlayersofCurrentWeek();
   }
 
   getAllPlayers() async {
@@ -47,7 +48,6 @@ class GameController extends GetxController {
           players.add(player);
         }
         update(['overall']);
-        getPlayersofCurrentWeek();
       });
     } catch (e) {
       print("Exception::getAllPlayers(): $e");
@@ -59,19 +59,16 @@ class GameController extends GetxController {
     DateTime startOfWeek =
         DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
-    DateTime formattedStart =
-        DateTime(startOfWeek.year, startOfWeek.month, startOfWeek.day);
-    DateTime formattedEnd =
-        DateTime(endOfWeek.year, endOfWeek.month, endOfWeek.day);
-
-    // Filter players whose scoredDate is within the current week
-    weeklyPlayers.value = players.where((p) {
-      return p.scoredDate != null &&
-          p.scoredDate!
-              .isAfter(formattedStart.subtract(Duration(seconds: 1))) &&
-          p.scoredDate!.isBefore(formattedEnd.add(Duration(seconds: 1)));
-    }).toList();
-    update(['weekly']);
+    weeklyPlayerStream = await playersCollection
+        .where('scoredDate', isGreaterThanOrEqualTo: startOfWeek)
+        .where('scoredDate', isLessThanOrEqualTo: endOfWeek)
+        .orderBy('highestScore', descending: true)
+        .snapshots()
+        .listen((snapshot) {
+      weeklyPlayers.value =
+          (snapshot.docs).map((d) => PlayerModel.fromMap(d.data())).toList();
+      update(['weekly']);
+    });
   }
 
   getGame() async {
