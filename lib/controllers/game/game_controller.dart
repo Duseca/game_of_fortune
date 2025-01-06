@@ -55,10 +55,17 @@ class GameController extends GetxController {
   }
 
   getPlayersofCurrentWeek() async {
-    // Calculate the start and end of the current week
-    DateTime startOfWeek =
-        DateTime.now().subtract(Duration(days: DateTime.now().weekday - 1));
-    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+    DateTime lastSaturday = DateTime.now().subtract(
+        Duration(days: DateTime.now().weekday + 1)); // Back to last Saturday
+    DateTime startOfWeek = DateTime(
+      lastSaturday.year,
+      lastSaturday.month,
+      lastSaturday.day,
+      20,
+    );
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 7));
+
+    log("dataaa ${startOfWeek} | ${endOfWeek}");
     weeklyPlayerStream = await playersCollection
         .where('scoredDate', isGreaterThanOrEqualTo: startOfWeek)
         .where('scoredDate', isLessThanOrEqualTo: endOfWeek)
@@ -100,13 +107,12 @@ class GameController extends GetxController {
   }
 
   updateScores() async {
-    if (userModelGlobal.value.highestScore == null ||
-        userModelGlobal.value.highestScore! < selectedChoices.length) {
-      await playersCollection.doc(auth.currentUser!.uid).update({
-        'highestScore': selectedChoices.length,
-        'scoredDate': DateTime.now()
-      });
+    if (selectedChoices.isEmpty) {
+      return;
     }
+    await playersCollection.doc(auth.currentUser!.uid).update(
+        {'highestScore': selectedChoices.length, 'scoredDate': DateTime.now()});
+
     await updatePrizepool();
   }
 

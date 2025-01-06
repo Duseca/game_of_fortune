@@ -296,19 +296,10 @@ class _GameOverState extends State<GameOver> {
                           padding: const EdgeInsets.all(8.0),
                           child: MyButton(
                               onTap: () async {
-                                // if (gameController.lifeUpdated.isFalse) {
-                                //   gameController.lifeUpdated(true);
-                                //   await gameController.updateLives('-');
                                 await gameController.updateScores();
                                 gameController.selectedChoices.clear();
                                 Get.back();
                                 Get.back();
-                                // } else {
-                                //   await gameController.updateScores();
-                                //   gameController.selectedChoices.clear();
-                                //   Get.back();
-                                //   Get.back();
-                                // }
                               },
                               buttonText: 'Done'),
                         ),

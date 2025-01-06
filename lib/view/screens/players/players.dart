@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -23,7 +22,6 @@ class _PlayersState extends State<Players> {
   @override
   void initState() {
     super.initState();
-    Get.find<GameController>().getPlayersofCurrentWeek();
   }
 
   @override
@@ -52,6 +50,7 @@ class _PlayersState extends State<Players> {
                   GetBuilder<GameController>(
                       id: 'weekly',
                       builder: (gameController) {
+                        gameController.getPlayersofCurrentWeek();
                         return gameController.weeklyPlayers.isNotEmpty
                             ? Container(
                                 padding: AppSizes.DEFAULT,
@@ -114,7 +113,9 @@ class _PlayersState extends State<Players> {
                                                       10.1,
                                                       8.0,
                                                       gameController
-                                                          .players.first.img,
+                                                          .weeklyPlayers
+                                                          .first
+                                                          .img,
                                                     ),
                                                     MyText(
                                                       text: (gameController
@@ -192,10 +193,11 @@ class _PlayersState extends State<Players> {
                                                     ListTile(
                                                       leading: CommonImageView(
                                                         url: gameController
-                                                                .weeklyPlayers[
-                                                                    index]
-                                                                .img ??
-                                                            dummyimg3,
+                                                            .weeklyPlayers[
+                                                                index]
+                                                            .img,
+                                                        imagePath:
+                                                            'assets/images/placeholder.png',
                                                         fit: BoxFit.cover,
                                                         radius: 200,
                                                         width: 50,
@@ -222,7 +224,7 @@ class _PlayersState extends State<Players> {
                                                         color: kGrey8Color,
                                                       ),
                                                       trailing: MyText(
-                                                        text: 'Highest Score',
+                                                        text: 'Scores',
                                                         paddingBottom: 24,
                                                       ),
                                                     ),
@@ -394,11 +396,11 @@ class _PlayersState extends State<Players> {
                                                     ListTile(
                                                       leading: CommonImageView(
                                                         url: gameController
-                                                                .players[index]
-                                                                .img ??
-                                                            dummyimg3,
+                                                            .players[index].img,
+                                                        imagePath:
+                                                            'assets/images/placeholder.png',
                                                         fit: BoxFit.cover,
-                                                        radius: 200,
+                                                        radius: 50,
                                                         width: 50,
                                                         height: 50,
                                                       ),
@@ -421,22 +423,25 @@ class _PlayersState extends State<Players> {
                                                             '${DateFormat('dd MMM yyyy').format(gameController.players[index].scoredDate!)}',
                                                         color: kGrey8Color,
                                                       ),
-                                                      trailing: MyText(
-                                                        text: 'Highest Score',
-                                                        paddingBottom: 24,
+                                                      trailing: Column(
+                                                        children: [
+                                                          MyText(
+                                                            text: 'Scores',
+                                                          ),
+                                                          Flexible(
+                                                            child: MyText(
+                                                              weight: FontWeight
+                                                                  .bold,
+                                                              text:
+                                                                  '${gameController.players[index].highestScore}',
+                                                              size: 30,
+                                                              color:
+                                                                  kSecondaryColor,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
-                                                    Positioned(
-                                                      bottom: 4,
-                                                      right: 40,
-                                                      child: MyText(
-                                                        weight: FontWeight.bold,
-                                                        text:
-                                                            '${gameController.players[index].highestScore}',
-                                                        size: 30,
-                                                        color: kSecondaryColor,
-                                                      ),
-                                                    )
                                                   ],
                                                 ),
                                               ),
@@ -476,7 +481,8 @@ class _PlayersState extends State<Players> {
           child: Center(
             child: CommonImageView(
               url: url,
-              radius: 200,
+              imagePath: 'assets/images/placeholder.png',
+              radius: 50,
               height: height2,
               width: height2,
               fit: BoxFit.cover,
