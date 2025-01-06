@@ -44,7 +44,7 @@ class Profile extends StatelessWidget {
                           ),
                         )
                       : CommonImageView(
-                          imagePath: Assets.imagesProfile,
+                          imagePath: 'assets/images/placeholder.png',
                           fit: BoxFit.contain,
                           height: 113,
                         ),
