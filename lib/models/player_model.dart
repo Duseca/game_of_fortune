@@ -1,22 +1,23 @@
 class PlayerModel {
   String? playerId, fName, lName, email, phoneNum, iso, img, username;
-  int? lives, highestScore;
-  DateTime? scoredDate, livesUpdatedOn;
+  int? lives, highestScore, weeklyScores;
+  DateTime? scoredDate, weeklyScoreDate, livesUpdatedOn;
 
-  PlayerModel({
-    this.email,
-    this.fName,
-    this.iso,
-    this.lName,
-    this.phoneNum,
-    this.playerId,
-    this.img,
-    this.livesUpdatedOn,
-    this.lives,
-    this.highestScore,
-    this.scoredDate,
-    this.username,
-  });
+  PlayerModel(
+      {this.email,
+      this.fName,
+      this.iso,
+      this.lName,
+      this.phoneNum,
+      this.playerId,
+      this.img,
+      this.livesUpdatedOn,
+      this.lives,
+      this.highestScore,
+      this.scoredDate,
+      this.username,
+      this.weeklyScores,
+      this.weeklyScoreDate});
 
   PlayerModel.fromMap(Map<String, dynamic> map) {
     email = map.containsKey('email') ? map['email'] ?? '' : '';
@@ -36,6 +37,10 @@ class PlayerModel {
     livesUpdatedOn = map.containsKey('livesUpdatedOn')
         ? map['livesUpdatedOn'].toDate()
         : DateTime.now();
+    weeklyScores = map.containsKey('weeklyScores') ? map['weeklyScores'] : 0;
+    weeklyScoreDate = map.containsKey('weeklyScoreDate')
+        ? map['weeklyScoreDate'].toDate()
+        : DateTime.now();
   }
 
   Map<String, dynamic> toMap() {
@@ -52,6 +57,8 @@ class PlayerModel {
       if (highestScore != null) 'highestScore': highestScore,
       if (livesUpdatedOn != null) 'livesUpdatedOn': livesUpdatedOn,
       if (scoredDate != null) 'scoredDate': scoredDate,
+      if (weeklyScores != null) 'weeklyScores': weeklyScores,
+      if (weeklyScoreDate != null) 'weeklyScoreDate': weeklyScoreDate,
     };
   }
 }

@@ -65,11 +65,17 @@ class GameController extends GetxController {
     );
     DateTime endOfWeek = startOfWeek.add(Duration(days: 7));
 
-    log("dataaa ${startOfWeek} | ${endOfWeek}");
+    if ((userModelGlobal.value.weeklyScoreDate != null &&
+        userModelGlobal.value.weeklyScoreDate!.isBefore(startOfWeek))) {
+      await playersCollection
+          .doc(auth.currentUser!.uid)
+          .update({'weeklyScores': 0});
+    }
+
     weeklyPlayerStream = await playersCollection
-        .where('scoredDate', isGreaterThanOrEqualTo: startOfWeek)
-        .where('scoredDate', isLessThanOrEqualTo: endOfWeek)
-        .orderBy('highestScore', descending: true)
+        .where('weeklyScoreDate', isGreaterThanOrEqualTo: startOfWeek)
+        .where('weeklyScoreDate', isLessThanOrEqualTo: endOfWeek)
+        .orderBy('weeklyScores', descending: true)
         .snapshots()
         .listen((snapshot) {
       weeklyPlayers.value =
@@ -107,12 +113,21 @@ class GameController extends GetxController {
   }
 
   updateScores() async {
-    if (selectedChoices.isEmpty) {
-      return;
+    Map<String, dynamic> data = {};
+    if (userModelGlobal.value.highestScore == null ||
+        userModelGlobal.value.highestScore! < selectedChoices.length) {
+      data['highestScore'] = selectedChoices.length;
+      data['scoredDate'] = DateTime.now();
     }
-    await playersCollection.doc(auth.currentUser!.uid).update(
-        {'highestScore': selectedChoices.length, 'scoredDate': DateTime.now()});
+    if (userModelGlobal.value.weeklyScores == null ||
+        userModelGlobal.value.weeklyScores! < selectedChoices.length) {
+      data['weeklyScores'] = selectedChoices.length;
+      data['weeklyScoreDate'] = DateTime.now();
+    }
 
+    if (data.isNotEmpty) {
+      await playersCollection.doc(auth.currentUser!.uid).update(data);
+    }
     await updatePrizepool();
   }
 

@@ -120,7 +120,7 @@ class AuthController extends GetxController {
         message:
             'Check your registered email address to find the password reset link',
       );
-    } on SocketException catch (e) {
+    } on SocketException {
       CustomSnackBars.instance.showFailureSnackbar(
           title: "Network Error!",
           message: "Please check your internet connection");
