@@ -54,23 +54,28 @@ class GameController extends GetxController {
     }
   }
 
-  getPlayersofCurrentWeek() async {
-    DateTime lastSaturday = DateTime.now().subtract(
-        Duration(days: DateTime.now().weekday + 1)); // Back to last Saturday
-    DateTime startOfWeek = DateTime(
-      lastSaturday.year,
-      lastSaturday.month,
-      lastSaturday.day,
-      20,
-    );
-    DateTime endOfWeek = startOfWeek.add(Duration(days: 7));
+  resetWeeklyScores(DateTime startOfWeek) async {
+    var snapshot = await playersCollection.get();
+    if (snapshot.docs.isNotEmpty) {
+      List<PlayerModel> players =
+          snapshot.docs.map((d) => PlayerModel.fromMap(d.data())).toList();
 
-    if ((userModelGlobal.value.weeklyScoreDate != null &&
-        userModelGlobal.value.weeklyScoreDate!.isBefore(startOfWeek))) {
-      await playersCollection
-          .doc(auth.currentUser!.uid)
-          .update({'weeklyScores': 0});
+      for (var player in players) {
+        if ((player.weeklyScoreDate != null &&
+            player.weeklyScoreDate!.isBefore(startOfWeek))) {
+          await playersCollection.doc(player.playerId).update({
+            'weeklyScores': 0,
+            'weeklyScoreDate': startOfWeek,
+          });
+        }
+      }
     }
+  }
+
+  getPlayersofCurrentWeek() async {
+    DateTime startOfWeek = getLastSaturday();
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 7));
+    await resetWeeklyScores(startOfWeek);
 
     weeklyPlayerStream = await playersCollection
         .where('weeklyScoreDate', isGreaterThanOrEqualTo: startOfWeek)
@@ -82,6 +87,18 @@ class GameController extends GetxController {
           (snapshot.docs).map((d) => PlayerModel.fromMap(d.data())).toList();
       update(['weekly']);
     });
+  }
+
+  DateTime getLastSaturday() {
+    DateTime lastSaturday = DateTime.now().subtract(
+        Duration(days: DateTime.now().weekday + 1)); // Back to last Saturday
+    DateTime startOfWeek = DateTime(
+      lastSaturday.year,
+      lastSaturday.month,
+      lastSaturday.day,
+      20,
+    );
+    return startOfWeek;
   }
 
   getGame() async {
