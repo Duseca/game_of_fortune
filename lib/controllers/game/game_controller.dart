@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:game_of_fortune/core/common/functions.dart';
 import 'package:game_of_fortune/core/constants/firebase_collection_references.dart';
 import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/core/utils/dialogs.dart';
@@ -77,7 +78,9 @@ class GameController extends GetxController {
   getPlayersofCurrentWeek() async {
     DateTime startOfWeek = getLastSaturday();
     DateTime endOfWeek = startOfWeek.add(Duration(days: 7));
-    await resetWeeklyScores(startOfWeek);
+    if (isSameDay(startOfWeek, DateTime.now())) {
+      await resetWeeklyScores(startOfWeek);
+    }
 
     weeklyPlayerStream = await playersCollection
         .where('weeklyScoreDate', isGreaterThanOrEqualTo: startOfWeek)
