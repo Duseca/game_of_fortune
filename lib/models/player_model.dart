@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class PlayerModel {
   String? playerId, fName, lName, email, phoneNum, iso, img, username;
   int? lives, highestScore, weeklyScores;

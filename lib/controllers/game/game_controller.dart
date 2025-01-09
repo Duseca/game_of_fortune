@@ -68,7 +68,6 @@ class GameController extends GetxController {
             player.weeklyScoreDate!.isBefore(startOfWeek))) {
           await playersCollection.doc(player.playerId).update({
             'weeklyScores': 0,
-            'weeklyScoreDate': startOfWeek,
           });
         }
       }
@@ -85,6 +84,7 @@ class GameController extends GetxController {
     weeklyPlayerStream = await playersCollection
         .where('weeklyScoreDate', isGreaterThanOrEqualTo: startOfWeek)
         .where('weeklyScoreDate', isLessThanOrEqualTo: endOfWeek)
+        .where('weeklyScores', isGreaterThan: 0)
         .orderBy('weeklyScores', descending: true)
         .snapshots()
         .listen((snapshot) {

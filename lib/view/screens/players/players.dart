@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
-import 'package:game_of_fortune/main.dart';
 import 'package:game_of_fortune/core/constants/app_colors.dart';
 import 'package:game_of_fortune/core/constants/app_sizes.dart';
 import 'package:game_of_fortune/core/constants/app_styling.dart';
@@ -219,11 +218,11 @@ class _PlayersState extends State<Players> {
                                                       ),
                                                       subtitle: MyText(
                                                         text:
-                                                            '${DateFormat('dd MMM yyyy').format(gameController.weeklyPlayers[index].scoredDate!)}',
+                                                            '${DateFormat('dd MMM yyyy').format(gameController.weeklyPlayers[index].weeklyScoreDate!)}',
                                                         color: kGrey8Color,
                                                       ),
                                                       trailing: MyText(
-                                                        text: 'Scores',
+                                                        text: 'Highest Scores',
                                                         paddingBottom: 24,
                                                       ),
                                                     ),
@@ -233,7 +232,7 @@ class _PlayersState extends State<Players> {
                                                       child: MyText(
                                                         weight: FontWeight.bold,
                                                         text:
-                                                            '${gameController.weeklyPlayers[index].highestScore}',
+                                                            '${gameController.weeklyPlayers[index].weeklyScores}',
                                                         size: 30,
                                                         color: kSecondaryColor,
                                                       ),
@@ -425,7 +424,8 @@ class _PlayersState extends State<Players> {
                                                       trailing: Column(
                                                         children: [
                                                           MyText(
-                                                            text: 'Scores',
+                                                            text:
+                                                                'Highest Scores',
                                                           ),
                                                           Flexible(
                                                             child: MyText(

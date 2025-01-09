@@ -9,28 +9,24 @@ import 'package:get/get.dart';
 import '../constants/firebase_collection_references.dart';
 
 getUserDataStream({required String userId}) async {
-  // getting user's data stream
   try {
-    await FirebaseCRUDService.instance
-        .getSingleDocStream(
-        collectionReference: playersCollection, docId: userId)
+    await playersCollection
+        .doc(userId)
+        .snapshots()
         .listen((DocumentSnapshot<Object?> event) {
-          if(event.data()!=null) {
-            userModelGlobal.value =
-                PlayerModel.fromMap(event.data() as Map<String, dynamic>);
-          }
-          else{
-            Get.offAll(()=>Login());
-            CustomSnackBars.instance.showFailureSnackbar(title: 'Error', message: 'Some error occurred. Please login again');
-
-          }
+      if (event.data() != null) {
+        userModelGlobal.value =
+            PlayerModel.fromMap(event.data() as Map<String, dynamic>);
+      } else {
+        Get.offAll(() => Login());
+        CustomSnackBars.instance.showFailureSnackbar(
+            title: 'Error', message: 'Some error occurred. Please login again');
+      }
     });
-  }
-  catch (e){
-
-    Get.offAll(()=>Login());
-    CustomSnackBars.instance.showFailureSnackbar(title: 'Error', message: 'Please login again');
-
+  } catch (e) {
+    Get.offAll(() => Login());
+    CustomSnackBars.instance
+        .showFailureSnackbar(title: 'Error', message: 'Please login again');
   }
 
   // you can cancel the stream if you wanna do
