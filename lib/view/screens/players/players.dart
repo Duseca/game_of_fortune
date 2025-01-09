@@ -50,7 +50,6 @@ class _PlayersState extends State<Players> {
                   GetBuilder<GameController>(
                       id: 'weekly',
                       builder: (gameController) {
-                        gameController.getPlayersofCurrentWeek();
                         return gameController.weeklyPlayers.isNotEmpty
                             ? Container(
                                 padding: AppSizes.DEFAULT,

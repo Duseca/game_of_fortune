@@ -55,7 +55,9 @@ class GameController extends GetxController {
   }
 
   resetWeeklyScores(DateTime startOfWeek) async {
-    var snapshot = await playersCollection.get();
+    var snapshot = await playersCollection
+        .where('weeklyScoreDate', isLessThan: startOfWeek)
+        .get();
     if (snapshot.docs.isNotEmpty) {
       List<PlayerModel> players =
           snapshot.docs.map((d) => PlayerModel.fromMap(d.data())).toList();
