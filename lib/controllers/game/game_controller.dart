@@ -136,12 +136,17 @@ class GameController extends GetxController {
 
   updateScores() async {
     Map<String, dynamic> data = {};
+
     if (userModelGlobal.value.highestScore == null ||
         userModelGlobal.value.highestScore! < selectedChoices.length) {
       data['highestScore'] = selectedChoices.length;
       data['scoredDate'] = DateTime.now();
     }
+
     if (userModelGlobal.value.weeklyScores == null ||
+        (userModelGlobal.value.weeklyScores != null &&
+            (userModelGlobal.value.weeklyScoreDate ?? DateTime.now())
+                .isBefore(getLastSaturday())) ||
         userModelGlobal.value.weeklyScores! < selectedChoices.length) {
       data['weeklyScores'] = selectedChoices.length;
       data['weeklyScoreDate'] = DateTime.now();
