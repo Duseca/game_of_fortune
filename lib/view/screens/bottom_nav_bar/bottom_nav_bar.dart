@@ -9,6 +9,9 @@ import 'package:game_of_fortune/view/screens/players/players.dart';
 import 'package:game_of_fortune/view/screens/profile/profile.dart';
 import 'package:game_of_fortune/view/widgets/common_image_view_widget.dart';
 import 'package:get/get.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+
+import '../../../core/constants/instances_constants.dart';
 
 class BottomNavBar extends StatefulWidget {
   @override
@@ -20,11 +23,18 @@ class _BottomNavBarState extends State<BottomNavBar>
   final gameController = Get.find<GameController>();
   late List<Map<String, dynamic>> items;
   int currentIndex = 0;
+  // PackageInfo? packageInfo;
 
   @override
   void initState() {
     super.initState();
     updateItems();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await notifications.initialize();
+      await notifications.initLocalNotifications();
+      await notifications.subscribeTopic();
+      // packageInfo = await PackageInfo.fromPlatform();
+    });
   }
 
   void updateItems() {
@@ -54,6 +64,7 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(BuildContext context) {
+    // log("message ${packageInfo?.version}");
     return Scaffold(
       body: screens[currentIndex],
       floatingActionButton: Container(

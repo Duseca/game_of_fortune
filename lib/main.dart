@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/config/routes/routes.dart';
 import 'package:game_of_fortune/config/themes/light_theme.dart';
@@ -11,23 +12,24 @@ import 'package:get_storage/get_storage.dart';
 import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() async {
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await MobileAds.instance.initialize();
-    await GetStorage.init();
-    await UnityAds.init(
-      gameId: Platform.isAndroid ? '5698309' : '5698308',
-      onComplete: () => print("init complete"),
-      onFailed: (error, errorMessage) => print("init failed"),
-    );
+@pragma(
+    'vm:entry-point') //for getting background notifications in release mode also
+Future<void> backgroundNotificationHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  print('bbbbbbbbb');
+}
 
-    await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform);
-    runApp(MyApp());
-  }, (err, stacktrace) {
-    print('Exception caught in run zoned guarded');
-  });
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: true, badge: true, sound: true);
+  FirebaseMessaging.onBackgroundMessage(backgroundNotificationHandler);
+
+  await GetStorage.init();
+  await MobileAds.instance.initialize();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
                   ),
                   CommonImageView(
                     imagePath: Assets.imagesNewMainIcon,
-                    height: 80,
+                    height: 60,
                     fit: BoxFit.contain,
                   ),
                   Obx(
@@ -103,10 +103,10 @@ class _HomeState extends State<Home> {
                                   physics: const NeverScrollableScrollPhysics(),
                                   children: [
                                     MyText(
-                                      paddingTop: 30,
+                                      paddingTop: 10,
                                       text: 'Lives Remaining',
                                       size: 18,
-                                      paddingBottom: 20,
+                                      paddingBottom: 10,
                                       textAlign: TextAlign.center,
                                       weight: FontWeight.w600,
                                     ),
@@ -143,10 +143,10 @@ class _HomeState extends State<Home> {
                                       ],
                                     ),
                                     MyText(
-                                      paddingTop: 30,
+                                      paddingTop: 20,
                                       text: 'Get Another Life',
                                       size: 18,
-                                      paddingBottom: 20,
+                                      paddingBottom: 10,
                                       textAlign: TextAlign.center,
                                       weight: FontWeight.w600,
                                     ),
@@ -179,7 +179,7 @@ class _HomeState extends State<Home> {
                                         ),
                                       ],
                                     ),
-                                    SizedBox(height: 40),
+                                    SizedBox(height: 20),
                                     Container(
                                       height: 138,
                                       decoration: rounded(kSecondaryColor2),
@@ -206,32 +206,32 @@ class _HomeState extends State<Home> {
                                       weight: FontWeight.w600,
                                       paddingBottom: 20,
                                       textAlign: TextAlign.center,
-                                      paddingTop: 30,
+                                      paddingTop: 20,
                                     ),
-                                    MyButton(
-                                        mBottom: 120,
-                                        onTap: () async {
-                                          var showTips =
-                                              await LocalStorageService.instance
-                                                  .read(key: 'showTips');
-                                          if (showTips == null ||
-                                              showTips == false) {
-                                            Get.to(Tips());
-                                          } else {
-                                            if (userModelGlobal.value.lives! >
-                                                0) {
-                                              await gameController
-                                                  .updateLives('-');
-                                              Get.to(() => Play());
-                                            } else {
-                                              Get.dialog(
-                                                barrierDismissible: false,
-                                                OhSnap(),
-                                              );
-                                            }
-                                          }
-                                        },
-                                        buttonText: 'Play'),
+                                    // MyButton(
+                                    //     mBottom: 120,
+                                    //     onTap: () async {
+                                    //       var showTips =
+                                    //           await LocalStorageService.instance
+                                    //               .read(key: 'showTips');
+                                    //       if (showTips == null ||
+                                    //           showTips == false) {
+                                    //         Get.to(Tips());
+                                    //       } else {
+                                    //         if (userModelGlobal.value.lives! >
+                                    //             0) {
+                                    //           await gameController
+                                    //               .updateLives('-');
+                                    //           Get.to(() => Play());
+                                    //         } else {
+                                    //           Get.dialog(
+                                    //             barrierDismissible: false,
+                                    //             OhSnap(),
+                                    //           );
+                                    //         }
+                                    //       }
+                                    //     },
+                                    //     buttonText: 'Play'),
                                   ],
                                 ),
                               ),
@@ -252,6 +252,29 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
+            ),
+            Padding(
+              padding: AppSizes.HORIZONTAL,
+              child: MyButton(
+                  mBottom: 120,
+                  onTap: () async {
+                    var showTips = await LocalStorageService.instance
+                        .read(key: 'showTips');
+                    if (showTips == null || showTips == false) {
+                      Get.to(Tips());
+                    } else {
+                      if (userModelGlobal.value.lives! > 0) {
+                        await gameController.updateLives('-');
+                        Get.to(() => Play());
+                      } else {
+                        Get.dialog(
+                          barrierDismissible: false,
+                          OhSnap(),
+                        );
+                      }
+                    }
+                  },
+                  buttonText: 'Play'),
             ),
           ],
         ),
