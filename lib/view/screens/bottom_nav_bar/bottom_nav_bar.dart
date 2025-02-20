@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/controllers/game/game_controller.dart';
 import 'package:game_of_fortune/core/constants/app_images/assets.dart';
@@ -32,8 +33,6 @@ class _BottomNavBarState extends State<BottomNavBar>
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await notifications.initialize();
       await notifications.initLocalNotifications();
-      await notifications.subscribeTopic();
-      // packageInfo = await PackageInfo.fromPlatform();
     });
   }
 
@@ -64,7 +63,6 @@ class _BottomNavBarState extends State<BottomNavBar>
 
   @override
   Widget build(BuildContext context) {
-    // log("message ${packageInfo?.version}");
     return Scaffold(
       body: screens[currentIndex],
       floatingActionButton: Container(

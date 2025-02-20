@@ -33,7 +33,7 @@ dependencies:
   unity_ads_plugin: ^0.3.20
   google_mobile_ads: ^5.2.0
   firebase_messaging: ^14.9.4
-  flutter_local_notifications: ^18.0.1
+  flutter_local_notifications: ^17.2.2
   package_info_plus: ^8.2.1
   # easy_ads_flutter: ^2.5.0
 

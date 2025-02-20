@@ -1,22 +1,22 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:game_of_fortune/config/routes/routes.dart';
 import 'package:game_of_fortune/config/themes/light_theme.dart';
 import 'package:game_of_fortune/core/bindings/bindings.dart';
+import 'package:game_of_fortune/core/constants/instances_constants.dart';
 import 'package:game_of_fortune/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:unity_ads_plugin/unity_ads_plugin.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 @pragma(
     'vm:entry-point') //for getting background notifications in release mode also
 Future<void> backgroundNotificationHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print('bbbbbbbbb');
+
+  // notifications.showNotification(message);
 }
 
 void main() async {
@@ -26,6 +26,7 @@ void main() async {
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
       alert: true, badge: true, sound: true);
   FirebaseMessaging.onBackgroundMessage(backgroundNotificationHandler);
+  await notifications.subscribeTopic();
 
   await GetStorage.init();
   await MobileAds.instance.initialize();

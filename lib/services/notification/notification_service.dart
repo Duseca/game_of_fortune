@@ -15,11 +15,19 @@ class NotificationServices {
     //initializing settings for android
     InitializationSettings initializationSettings = InitializationSettings(
         android: AndroidInitializationSettings("@mipmap/ic_launcher"),
-        iOS: DarwinInitializationSettings());
+        iOS: DarwinInitializationSettings(
+          onDidReceiveLocalNotification:
+              (int id, String? title, String? body, String? payload) async {
+            print("on did recieve called");
+          },
+        ));
 
     //we are getting details variable from the payload parameter of the notificationsPlugin.show() method
     await localNotificationsPlugin.initialize(
       initializationSettings,
+      onDidReceiveNotificationResponse: (details) async {
+        print("on initialize called");
+      },
     );
   }
 
@@ -64,17 +72,23 @@ class NotificationServices {
   }
 
   initLocalNotifications() async {
-    FirebaseMessaging.instance.getInitialMessage().then((message) async {});
+    FirebaseMessaging.instance.getInitialMessage().then((message) async {
+      if (message != null) {
+        print("on get initial message called");
+      }
+    });
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       showNotification(message);
     });
 
-    FirebaseMessaging.onMessageOpenedApp.listen((message) async {});
+    FirebaseMessaging.onMessageOpenedApp.listen((message) async {
+      print("on app opened called");
+    });
   }
 
   Future<void> subscribeTopic() async {
-    await FirebaseMessaging.instance.subscribeToTopic('all').then((value) {
+    await FirebaseMessaging.instance.subscribeToTopic('players').then((value) {
       if (kDebugMode) {
         print('Subscribed to topic: all');
       }
